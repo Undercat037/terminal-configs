@@ -1,0 +1,104 @@
+function fish_greeting
+set_color normal
+end
+
+if status is-interactive
+
+# Sets
+set --erase --universal fish_key_bindings
+set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
+set -g stell_alive "#ffb31c"
+
+# Exports
+#export TERM=xterm
+
+# Inits
+starship init fish | source
+
+# Abbrs
+abbr cat 'bat --style header,snip,changes'
+abbr wget 'wget -c '
+
+abbr tarnow 'tar -acf '
+abbr untar 'tar -zxvf '
+
+abbr pip 'pip --break-system-packages'
+
+# Aliases
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+alias stell-alive-arts="fish ~/my-files/scripts/stell-alive.fish"
+alias stell-alive="cd ~/my-files/stell-alive/ && python ~/my-files/stell-alive/still_alive_credit.py"
+
+alias dl="cd ~/Downloads"
+alias doc="cd ~/Documents"
+alias dt="cd ~/Desktop"
+
+alias reload="source ~/.config/fish/config.fish"
+alias ls='eza -al --color=always --group-directories-first --icons' # preferred listing
+alias lsz='eza -al --color=always --total-size --group-directories-first --icons' # include file size
+alias la='eza -a --color=always --group-directories-first --icons' # all files and dirs
+alias ll='eza -l --color=always --group-directories-first --icons' # long format
+alias lt='eza -aT --color=always --group-directories-first --icons' # tree listing
+alias ld='eza -ald --color=always --group-directories-first --icons .*' # show only dotfiles
+
+alias grep='ugrep --color=auto'
+alias egrep='ugrep -E --color=auto'
+alias fgrep='ugrep -F --color=auto'
+
+alias mirrors='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
+alias please='sudo'
+
+alias ffh='fastfetch --logo ~/.config/fastfetch/hypr.png --logo-type kitty --logo-width 45 --logo-height 35'
+alias ffhg='fastfetch --logo ~/.config/fastfetch/hypr-gruvbox.png --logo-type kitty --logo-width 45 --logo-height 35'
+alias ffm='fastfetch --logo ~/.config/fastfetch/myst.png --logo-type kitty --logo-width 50 --logo-height 25'
+alias ffnya='fastfetch --logo ~/.config/fastfetch/nyarch.png --logo-type kitty --logo-width 50 --logo-height 25'
+alias ff='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/arch.txt'
+
+alias ffc='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/cake.txt --logo-color-1 "$stell_alive"'
+alias ffn='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/nuke.txt --logo-color-1 "$stell_alive"'
+alias ffcam='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/camera.txt --logo-color-1 "$stell_alive"'
+alias ffs='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/sience.txt --logo-color-1 "$stell_alive"'
+alias fffire='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/fire.txt --logo-color-1 "$stell_alive"'
+alias ffap='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/aperture.txt --logo-color-1 "$stell_alive"'
+alias ffmesa='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/blackmesa.txt --logo-color-1 "$stell_alive"'
+alias ffkaboom='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/kaboom.txt --logo-color-1 "$stell_alive"'
+alias ffbh='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/broken-heart.txt --logo-color-1 "$stell_alive"'
+
+alias neo='neo-matrix --speed=13'
+alias bonsai='rbonsai -li'
+alias quarium='asciiquarium'
+alias rick='curl ascii.live/rick'
+alias map='telnet mapscii.me'
+
+#========================
+#DeltaCat Scripts block
+#=========================
+alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | grep -E "Percentage Used|Available Spare|Data Units Written"'
+alias dcs-grub-edit='sudo nano /etc/default/grub'
+alias dcs-grub-upgrade='sudo grub-mkconfig -o /boot/grub/grub.cfg'
+alias dcs-cmdline='cat /etc/default/grub | grep "GRUB_CMDLINE_LINUX_DEFAULT" '
+alias dcs-dracut-rebuild='sudo dracut rebuild --force'
+alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
+alias dcs-clear-pkg='sudo rm -rf /var/cache/pacman/pkg/*'
+alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
+alias dcs-fish-edit='nano ~/.config/fish/config.fish'
+
+alias dcs-folders-setup='cd ~ && mkdir Pictures && mkdir Videos && mkdir Music && mkdir Documents && mkdir Downloads && mkdir Desktop && mkdir Games && mkdir Scripts && mkdir my-files' 
+
+alias dcs-rf-unblock='sudo rfkill unblock 1'
+alias dcs-fix-lock='hyprctl keyword misc:allow_session_lock_restore 1 && sleep 0.5 && hyprlock'
+
+alias dcs-hashcat-restore='sudo find /root/.local/share/hashcat/sessions/ -name "*.restore" && read -P "Session name: " SESSIONHC && sudo hashcat --session $SESSIONHC --restore'
+alias dcs-hashcat-passwd='ls && read -P "Filename: " HASHNAME && sudo hashcat -m 22000 $HASHNAME --show --potfile-path /root/.local/share/hashcat/hashcat.potfile'
+alias dcs-hashcat-passcheck='sudo cat /root/.local/share/hashcat/hashcat.potfile'
+alias dcs-hashcat-watching='sudo watch -n 5 bat --style header,snip,changes /root/.local/share/hashcat/hashcat.potfile'  
+
+alias dcs-mon-start='sudo airmon-ng start wlp3s0'
+alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
+
+end

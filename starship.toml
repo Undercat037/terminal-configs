@@ -1,0 +1,56 @@
+# ~/.config/starship.toml
+
+format = """
+[╭──](cyan)\
+[\\(](cyan)\
+$username\
+[@](yellow)\
+$hostname\
+[\\)](cyan)\
+$directory\
+$time\
+$cmd_duration\
+$all\
+$line_break\
+[╰─](cyan)\
+$character\
+"""
+
+[username]
+format = "[$user](bold red)"
+show_always = true
+
+[hostname]
+format = "[$hostname](bold green)"
+ssh_only = false
+disabled = false
+
+[directory]
+format = "[\\[](cyan)[$path](bold blue)[\\]](cyan)"
+truncation_length = 3
+truncate_to_repo = false
+
+[time]
+format = "[\\[](cyan)[$time](bold yellow)[\\]](cyan)"
+time_format = "%Y/%m/%d][%H:%M:%S"
+disabled = false
+
+[cmd_duration]
+format = " [took](cyan) [$duration](bold magenta)"
+min_time = 1000
+
+[character]
+success_symbol = "[\\$](bold green)"
+error_symbol = "[#](bold red)"
+
+[python]
+format = '[(${virtualenv})─](bold cyan)'
+
+[git_branch]
+disabled = true
+[git_status]
+disabled = true
+[package]
+disabled = true
+[line_break]
+disabled = false
