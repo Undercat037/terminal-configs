@@ -1,4 +1,4 @@
-##Aliases:
+## Aliases:
 
 **Навігація:**
 - `..` / `...` / `....` — переміщення на 1-5 рівнів вгору
@@ -36,7 +36,7 @@
 - `dcs-hashcat-*` — керування hashcat сесіями та паролями
 - `dcs-folders-setup` — створення стандартної структури папок
 
-Screenshots:
+## Screenshots:
 ![terminals](examples/terminals.png)
 ![ff](examples/ff.png)
 ![ffh](examples/ffh.png)
