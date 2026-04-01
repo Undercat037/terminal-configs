@@ -22,7 +22,7 @@ abbr wget 'wget -c '
 abbr tarnow 'tar -acf '
 abbr untar 'tar -zxvf '
 
-abbr pip 'pip --break-system-packages'
+abbr pip-inst 'pip install --break-system-packages'
 
 # Aliases
 alias ..="cd .."
@@ -50,7 +50,13 @@ alias grep='ugrep --color=auto'
 alias egrep='ugrep -E --color=auto'
 alias fgrep='ugrep -F --color=auto'
 
-alias mirrors='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
+alias mir-arch='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
+alias mir-blac='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/blackarch-mirrorlist'
+alias mir-chao='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/chaotic-mirrorlist'
+alias mir-cach='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/cachyos-mirrorlist'
+alias mir-cach3='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/cachyos-v3-mirrorlist'
+alias mir-cach4='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/cachyos-v4-mirrorlist'
+
 alias please='sudo'
 
 alias ffh='fastfetch --logo ~/.config/fastfetch/hypr.png --logo-type kitty --logo-width 45 --logo-height 35'
@@ -75,9 +81,9 @@ alias quarium='asciiquarium'
 alias rick='curl ascii.live/rick'
 alias map='telnet mapscii.me'
 
-#========================
-#DeltaCat Scripts block
-#=========================
+# =========================
+#  DeltaCat Scripts block
+# =========================
 alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | grep -E "Percentage Used|Available Spare|Data Units Written"'
 alias dcs-grub-edit='sudo nano /etc/default/grub'
 alias dcs-grub-upgrade='sudo grub-mkconfig -o /boot/grub/grub.cfg'
@@ -87,6 +93,7 @@ alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
 alias dcs-clear-pkg='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
 alias dcs-fish-edit='nano ~/.config/fish/config.fish'
+alias dcs-btrfs-balace='sudo btrfs balance start -dusage=90 / '
 
 alias dcs-folders-setup='cd ~ && mkdir Pictures && mkdir Videos && mkdir Music && mkdir Documents && mkdir Downloads && mkdir Desktop && mkdir Games && mkdir Scripts && mkdir my-files' 
 
