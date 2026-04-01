@@ -12,8 +12,8 @@
 - `reload` — перезавантажити конфіг fish
 
 **Mirrors:**
-- `mir-arch` / `mir-blac` / `mir-chao` — оновлення mirrorlist для Arch / BlackArch / Chaotic
-- `mir-cach` / `mir-cach3` / `mir-cach4` — оновлення mirrorlist для CachyOS
+- `mir-arch` / `mir-blac` / `mir-chao` — оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
+- `mir-cach` / `mir-cach3` / `mir-cach4` — оновлення mirrorlist для CachyOS репозиторіїв
 
 **Fastfetch:**
 - `ff` — стандартний Arch логотип
