@@ -1,21 +1,25 @@
-## Aliases:
+## Aliases
 
 **Навігація:**
 - `..` / `...` / `....` — переміщення на 1-5 рівнів вгору
 - `dl` / `doc` / `dt` — швидкий перехід до Downloads / Documents / Desktop
 
 **Утиліти:**
-- `ls` / `la` / `ll` / `lt` / `ld` — варіанти `eza` з іконками
+- `ls` / `la` / `ll` / `lt` / `ld` / `lsz` — варіанти `eza` з іконками
 - `cat` — `bat` з заголовком і підсвіткою змін
 - `grep` / `egrep` / `fgrep` — через `ugrep` з кольором
 - `please` — `sudo`
 - `reload` — перезавантажити конфіг fish
 
+**Mirrors:**
+- `mir-arch` / `mir-blac` / `mir-chao` — оновлення mirrorlist для Arch / BlackArch / Chaotic
+- `mir-cach` / `mir-cach3` / `mir-cach4` — оновлення mirrorlist для CachyOS
+
 **Fastfetch:**
 - `ff` — стандартний Arch логотип
 - `ffh` / `ffhg` — Hyprland / Hyprland Gruvbox
 - `ffm` / `ffnya` — Myst / NyArch
-- `ffc` / `ffn` / `fffire` / `ffap` / `ffmesa` / `ffkaboom` / `ffbh` — ASCII шаблони з кольором
+- `ffc` / `ffn` / `fffire` / `ffap` / `ffmesa` / `ffkaboom` / `ffbh` — ASCII з фіналу гри Portal
 
 **Розваги:**
 - `neo` — Matrix ефект
@@ -29,15 +33,10 @@
 - `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-cmdline` — керування GRUB
 - `dcs-pacman-edit` / `dcs-clear-pkg` / `dcs-pacman-unlock` — керування pacman
 - `dcs-dracut-rebuild` — перебудова initramfs
+- `dcs-btrfs-balace` — балансування BTRFS розділу
 - `dcs-fish-edit` — редагування конфігу fish
-- `dcs-rf-unblock` — розблокування WiFi 
--  `dcs-fix-lock` виправлення локскріну hyprland
+- `dcs-rf-unblock` — розблокування WiFi
+- `dcs-fix-lock` — виправлення локскріну Hyprland
 - `dcs-mon-start` / `dcs-mon-stop` — monitor mode для wlp3s0
 - `dcs-hashcat-*` — керування hashcat сесіями та паролями
 - `dcs-folders-setup` — створення стандартної структури папок
-
-## Screenshots:
-![terminals](examples/terminals.png)
-![ff](examples/ff.png)
-![ffh](examples/ffh.png)
-![ffc](examples/ffc.png)
