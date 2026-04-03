@@ -8,6 +8,7 @@ if status is-interactive
 set --erase --universal fish_key_bindings
 set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
 set -g stell_alive "#ffb31c"
+set -x PATH /home/deltacat/.cargo/bin $PATH
 
 # Exports
 #export TERM=xterm
@@ -107,5 +108,8 @@ alias dcs-hashcat-watching='sudo watch -n 5 bat --style header,snip,changes /roo
 
 alias dcs-mon-start='sudo airmon-ng start wlp3s0'
 alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
+
+alias dcs-setup-rustbookua='cargo install mdbook; git clone https://github.com/rust-lang-ua/rustbook_ukrainian ~/my-files/rustbook_ukrainian && cd ~/my-files/rustbook_ukrainian && mdbook build'
+alias dcs-rustbookua='cd ~/my-files/rustbook_ukrainian; and mdbook serve --open'
 
 end
