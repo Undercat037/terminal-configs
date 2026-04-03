@@ -113,6 +113,6 @@ alias dcs-mon-start='sudo airmon-ng start wlp3s0'
 alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
 
 alias dcs-rustbookua-setup='cargo install mdbook; git clone https://github.com/rust-lang-ua/rustbook_ukrainian ~/my-files/rustbook_ukrainian && cd ~/my-files/rustbook_ukrainian && mdbook build'
-alias dcs-rustbookua='cd ~/my-files/rustbook_ukrainian; and mdbook serve --open'
+alias dcs-rustbookua='cd ~/my-files/rustbook_ukrainian && mdbook serve --open'
 
 end
