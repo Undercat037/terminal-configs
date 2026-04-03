@@ -99,7 +99,7 @@ alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
 alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
 
-alias dcs-folders-setup='cd ~ && mkdir Pictures && mkdir Videos && mkdir Music && mkdir Documents && mkdir Downloads && mkdir Desktop && mkdir Games && mkdir Scripts && mkdir my-files' 
+alias dcs-folders-setup='mkdir -p ~/Pictures ~/Videos ~/Music ~/Documents ~/Downloads ~/Desktop ~/Games ~/Scripts ~/my-files'
 
 alias dcs-rf-unblock='sudo rfkill unblock 1'
 alias dcs-fix-lock='hyprctl keyword misc:allow_session_lock_restore 1 && sleep 0.5 && hyprlock'
