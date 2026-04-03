@@ -30,8 +30,8 @@
 
 **DeltaCat Scripts (`dcs-`):**
 - `dcs-health-analyze` — стан батареї та SSD
-- `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-cmdline` - керування GRUB
-- `dcs-pacman-edit` / `dcs-clear-pkg` / `dcs-pacman-unlock` - керування pacman
+- `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-grub-cmdline` - керування GRUB
+- `dcs-pacman-edit` / `dcs-pacman-clear` / `dcs-pacman-unlock` - керування pacman
 - `dcs-dracut-rebuild` - перебудова initramfs
 - `dcs-btrfs-balace` - балансування BTRFS розділу
 - `dcs-fish-edit` - редагування конфігу fish
