@@ -86,15 +86,18 @@ alias map='telnet mapscii.me'
 #  DeltaCat Scripts block
 # =========================
 alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | grep -E "Percentage Used|Available Spare|Data Units Written"'
+alias dcs-btrfs-balace='sudo btrfs balance start -dusage=90 / '
+
 alias dcs-grub-edit='sudo nano /etc/default/grub'
 alias dcs-grub-upgrade='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-alias dcs-cmdline='cat /etc/default/grub | grep "GRUB_CMDLINE_LINUX_DEFAULT" '
+alias dcs-grub-cmdline='cat /etc/default/grub | grep "GRUB_CMDLINE_LINUX_DEFAULT" '
 alias dcs-dracut-rebuild='sudo dracut rebuild --force'
+
+alias dcs-fish-edit='nano ~/.config/fish/config.fish'
+
 alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
 alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
-alias dcs-fish-edit='nano ~/.config/fish/config.fish'
-alias dcs-btrfs-balace='sudo btrfs balance start -dusage=90 / '
 
 alias dcs-folders-setup='cd ~ && mkdir Pictures && mkdir Videos && mkdir Music && mkdir Documents && mkdir Downloads && mkdir Desktop && mkdir Games && mkdir Scripts && mkdir my-files' 
 
