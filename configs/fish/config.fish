@@ -11,8 +11,7 @@ set -g stell_alive "#ffb31c"
 set -x PATH /home/deltacat/.cargo/bin $PATH
 set -x ANDROID_NDK_HOME /opt/android-ndk
 
-# Exports (set better)
-#export TERM=xterm
+#set +x TERM xterm
 
 # Inits
 starship init fish | source
