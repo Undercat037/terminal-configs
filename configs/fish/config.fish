@@ -11,7 +11,8 @@ set -g stell_alive "#ffb31c"
 set -x PATH /home/deltacat/.cargo/bin $PATH
 set -x ANDROID_NDK_HOME /opt/android-ndk
 
-#set +x TERM xterm
+# Exports (set better)
+#export TERM=xterm
 
 # Inits
 starship init fish | source
@@ -114,5 +115,7 @@ alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
 
 alias dcs-rustbookua-setup='cargo install mdbook; git clone https://github.com/rust-lang-ua/rustbook_ukrainian ~/my-files/rustbook_ukrainian && cd ~/my-files/rustbook_ukrainian && mdbook build'
 alias dcs-rustbookua='cd ~/my-files/rustbook_ukrainian && mdbook serve --open'
+alias dcs-rs-aarch-build-rel='cargo ndk -t aarch64-linux-android build --release'
+alias dcs-rs-aarch-build='cargo ndk -t aarch64-linux-android build'
 
 end
