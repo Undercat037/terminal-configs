@@ -100,6 +100,7 @@ alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
 alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
 
+alias dcs-dependencies-setup='sudo pacman -Syy fish eza ugrep fastfetch matugen'
 alias dcs-folders-setup='mkdir -p ~/Pictures ~/Videos ~/Music ~/Documents ~/Downloads ~/Desktop ~/Games ~/Scripts ~/my-files'
 
 alias dcs-rf-unblock='sudo rfkill unblock 1'
@@ -113,6 +114,7 @@ alias dcs-hashcat-watching='sudo watch -n 5 bat --style header,snip,changes /roo
 alias dcs-mon-start='sudo airmon-ng start wlp3s0'
 alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
 
+alias dcs-rust-setup='sudo pacman -S rustup rust-src cargo-ndk android-ndk && rustup default stable && rustup target add aarch64-linux-android'
 alias dcs-rustbookua-setup='cargo install mdbook; git clone https://github.com/rust-lang-ua/rustbook_ukrainian ~/my-files/rustbook_ukrainian && cd ~/my-files/rustbook_ukrainian && mdbook build'
 alias dcs-rustbookua='cd ~/my-files/rustbook_ukrainian && mdbook serve --open'
 alias dcs-rs-aarch-build-rel='cargo ndk -t aarch64-linux-android build --release'
