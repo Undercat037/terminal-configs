@@ -4,20 +4,24 @@ end
 
 if status is-interactive
 
+# ==========
 # Sets
+# ==========
 set --erase --universal fish_key_bindings
 set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
 set -g stell_alive "#ffb31c"
 set -x PATH /home/deltacat/.cargo/bin $PATH
 set -x ANDROID_NDK_HOME /opt/android-ndk
+# set -x TERM xterm
 
-# Exports (set better)
-#export TERM=xterm
-
+# ==========
 # Inits
+# ==========
 starship init fish | source
 
+# ==========
 # Abbrs
+# ==========
 abbr cat 'bat --style header,snip,changes'
 abbr wget 'wget -c '
 
@@ -26,7 +30,9 @@ abbr untar 'tar -zxvf '
 
 abbr pip-inst 'pip install --break-system-packages'
 
+# ==========
 # Aliases
+# ==========
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
