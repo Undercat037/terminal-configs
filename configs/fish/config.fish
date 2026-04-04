@@ -123,7 +123,7 @@ alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
 alias dcs-rust-setup='sudo pacman -S rustup rust-src cargo-ndk android-ndk && rustup default stable && rustup target add aarch64-linux-android'
 alias dcs-rustbookua-setup='cargo install mdbook; git clone https://github.com/rust-lang-ua/rustbook_ukrainian ~/my-files/rustbook_ukrainian && cd ~/my-files/rustbook_ukrainian && mdbook build'
 alias dcs-rustbookua='cd ~/my-files/rustbook_ukrainian && mdbook serve --open'
-alias dcs-rs-aarch-build-rel='cargo ndk -t aarch64-linux-android build --release'
-alias dcs-rs-aarch-build='cargo ndk -t aarch64-linux-android build'
+alias dcs-rust-aarch-build-rel='cargo ndk -t aarch64-linux-android build --release'
+alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 
 end
