@@ -29,7 +29,7 @@
 - `map` - інтерактивна карта світу в терміналі
 
 **DeltaCat Scripts (`dcs-`):**
-- `dcs-health-analyze` — стан батареї та SSD
+- `dcs-health-analyze` - стан батареї та SSD
 - `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-grub-cmdline` - керування GRUB
 - `dcs-pacman-edit` / `dcs-pacman-clear` / `dcs-pacman-unlock` - керування pacman
 - `dcs-dracut-rebuild` - перебудова initramfs
@@ -40,5 +40,8 @@
 - `dcs-mon-start` / `dcs-mon-stop` - monitor mode для wlp3s0
 - `dcs-hashcat-*` - керування hashcat сесіями та паролями
 - `dcs-folders-setup` - створення стандартної структури папок
+- `dcs-dependencies-setup` - встановлення основних залежностей
+- `dcs-rust-setup` - встановлення Rust з підтримкою Android (aarch64)
+- `dcs-rust-aarch-build` / `dcs-rust-aarch-build-rel` - збірка під aarch64-linux-android
 - `dcs-rustbookua-setup` - встановлення rustbook з українським перекладом
-- `dcs-rustbookua` - закуск rustbook
+- `dcs-rustbookua` - запуск rustbook
