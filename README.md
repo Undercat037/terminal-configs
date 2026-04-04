@@ -37,7 +37,7 @@
 - `dcs-fish-edit` - редагування конфігу fish
 - `dcs-rf-unblock` - розблокування WiFi
 - `dcs-fix-lock` - виправлення локскріну Hyprland
-- `dcs-mon-start` / `dcs-mon-stop` — monitor mode для wlp3s0
+- `dcs-mon-start` / `dcs-mon-stop` - monitor mode для wlp3s0
 - `dcs-hashcat-*` - керування hashcat сесіями та паролями
 - `dcs-folders-setup` - створення стандартної структури папок
 - `dcs-rustbookua-setup` - встановлення rustbook з українським перекладом
