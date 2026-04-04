@@ -9,8 +9,9 @@ set --erase --universal fish_key_bindings
 set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
 set -g stell_alive "#ffb31c"
 set -x PATH /home/deltacat/.cargo/bin $PATH
+set -x ANDROID_NDK_HOME /opt/android-ndk
 
-# Exports
+# Exports (set better)
 #export TERM=xterm
 
 # Inits
