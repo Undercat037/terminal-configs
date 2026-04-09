@@ -37,7 +37,7 @@
 - `dcs-fish-edit` - редагування конфігу fish
   
 - `dcs-rf-unblock` - розблокування WiFi
- 
+
 - `dcs-mon-start` / `dcs-mon-stop` - monitor mode для wlp3s0
 - `dcs-hashcat-*` - керування hashcat сесіями та паролями
 - 
