@@ -35,12 +35,15 @@
 - `dcs-dracut-rebuild` - перебудова initramfs
 - `dcs-btrfs-balace` - балансування BTRFS розділу
 - `dcs-fish-edit` - редагування конфігу fish
+  
 - `dcs-rf-unblock` - розблокування WiFi
-- `dcs-fix-lock` - виправлення локскріну Hyprland
+ 
 - `dcs-mon-start` / `dcs-mon-stop` - monitor mode для wlp3s0
 - `dcs-hashcat-*` - керування hashcat сесіями та паролями
+- 
 - `dcs-folders-setup` - створення стандартної структури папок
 - `dcs-dependencies-setup` - встановлення основних залежностей
+
 - `dcs-rust-setup` - встановлення Rust з підтримкою Android (aarch64)
 - `dcs-rust-aarch-build` / `dcs-rust-aarch-build-rel` - збірка під aarch64-linux-android
 - `dcs-rustbookua-setup` - встановлення rustbook з українським перекладом
