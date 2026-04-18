@@ -40,7 +40,7 @@ abbr gt-commit 'git commit -m "Commit_Name"'
 abbr gt-push 'git push'
 abbr gt-pull 'git pull'
 abbr gt-log 'git log --oneline --graph'
-abbr gt-save-pass'git config --global credential.helper store'
+abbr gt-save-pass 'git config --global credential.helper store'
 
 # ==========
 # Aliases
