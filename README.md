@@ -12,14 +12,14 @@
 - `reload` - перезавантажити конфіг fish
 
 **Git арбревіації**
-- `gt-init`
-- gt-status
-- gt-add-all
-- gt-commit
-- gt-push
-- gt-pull
-- gt-log
-- gt-save-pass 
+- `gt-init` - ініціалізація репозиторію
+- `gt-status` - статус репозиторію
+- `gt-add-all` - додає в комміт всі файли репо
+- `gt-commit` - створює комміт
+- `gt-push` - вивантажує комміт
+- `gt-pull` - завантажує оновлення репозиторію(треба бути в потрібному репозиторії)
+- `gt-log` - логи
+- `gt-save-pass` - зберігає данні для відвантаження(Ussername, Personal Access Token) у credential store
 
 **Mirrors:**
 - `mir-arch` / `mir-blac` / `mir-chao` - оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
