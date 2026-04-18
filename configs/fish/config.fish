@@ -41,6 +41,7 @@ abbr gt-push 'git push'
 abbr gt-pull 'git pull'
 abbr gt-log 'git log --oneline --graph'
 abbr gt-save-pass 'git config --global credential.helper store'
+abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
 
 # ==========
 # Aliases
