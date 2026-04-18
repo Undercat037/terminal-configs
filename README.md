@@ -2,7 +2,7 @@
 
 **Навігація:**
 - `..` / `...` / `....` - переміщення на 1-5 рівнів вгору
-- `dl` / `doc` / `dt` - швидкий перехід до Downloads / Documents / Desktop
+- `dl` / `doc` / `dt` / `gt` - швидкий перехід до Downloads / Documents / Desktop / ~/my-files/my-git-repos
 
 **Утиліти:**
 - `ls` / `la` / `ll` / `lt` / `ld` / `lsz` - варіанти `eza` з іконками
@@ -10,6 +10,7 @@
 - `grep` / `egrep` / `fgrep` - через `ugrep` з кольором
 - `please` - `sudo`
 - `reload` - перезавантажити конфіг fish
+- `gt-fastcommit` - швидке вивантаження комміту
 
 **Git арбревіації**
 - `gt-init` - ініціалізація репозиторію
