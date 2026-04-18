@@ -12,6 +12,7 @@ set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_
 set -g stell_alive "#ffb31c"
 set -x PATH /home/deltacat/.cargo/bin $PATH
 set -x ANDROID_NDK_HOME /opt/android-ndk
+set -gx PATH $PATH /home/deltacat/.lmstudio/bin
 # set -x TERM xterm
 
 # ==========
@@ -29,6 +30,17 @@ abbr tarnow 'tar -acf '
 abbr untar 'tar -zxvf '
 
 abbr pip-inst 'pip install --break-system-packages'
+
+
+# ==== git ==== 
+abbr gt-init 'git init'
+abbr gt-status 'git status'
+abbr gt-add-all 'git add .'
+abbr gt-commit 'git commit -m "Commit_Name"'
+abbr gt-push 'git push'
+abbr gt-pull 'git pull'
+abbr gt-log 'git log --oneline --graph'
+abbr gt-save-pass'git config --global credential.helper store'
 
 # ==========
 # Aliases
@@ -126,3 +138,5 @@ alias dcs-rust-aarch-build-rel='cargo ndk -t aarch64-linux-android build --relea
 alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 
 end
+
+
