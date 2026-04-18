@@ -10,7 +10,6 @@
 - `grep` / `egrep` / `fgrep` - через `ugrep` з кольором
 - `please` - `sudo`
 - `reload` - перезавантажити конфіг fish
-- `gt-fastcommit` - швидке вивантаження комміту
 
 **Git арбревіації**
 - `gt-init` - ініціалізація репозиторію
@@ -22,6 +21,7 @@
 - `gt-log` - логи
 - `gt-save-pass` - зберігає данні для відвантаження(Username, Personal Access Token) у credential store
 - `gt-setup` - швидке розгортування репозиторію
+- `gt-fastcommit` - швидке вивантаження комміту
 
 **Mirrors:**
 - `mir-arch` / `mir-blac` / `mir-chao` - оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
