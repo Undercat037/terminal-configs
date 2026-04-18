@@ -20,6 +20,7 @@
 - `gt-pull` - завантажує оновлення репозиторію(треба бути в потрібному репозиторії)
 - `gt-log` - логи
 - `gt-save-pass` - зберігає данні для відвантаження(Username, Personal Access Token) у credential store
+- `gt-setup` - швидке розгортування репозиторію
 
 **Mirrors:**
 - `mir-arch` / `mir-blac` / `mir-chao` - оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
