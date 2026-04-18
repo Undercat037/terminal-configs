@@ -33,16 +33,16 @@ abbr pip-inst 'pip install --break-system-packages'
 
 
 # ==== git ==== 
-abbr dcs-gt-init 'git init'
-abbr dcs-gt-status 'git status'
-abbr dcs-gt-add-all 'git add .'
-abbr dcs-gt-commit 'git commit -m "Commit_Name"'
-abbr dcs-gt-push 'git push'
-abbr dcs-gt-pull 'git pull'
-abbr dcs-gt-log 'git log --oneline --graph'
-abbr dcs-gt-save-pass 'git config --global credential.helper store'
-abbr dcs-gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
-abbr dcs-gt-fastcommit 'git add .; git commit -m "Commit"; git push'
+abbr gt-init 'git init'
+abbr gt-status 'git status'
+abbr gt-add-all 'git add .'
+abbr gt-commit 'git commit -m "Commit_Name"'
+abbr gt-push 'git push'
+abbr gt-pull 'git pull'
+abbr gt-log 'git log --oneline --graph'
+abbr gt-save-pass 'git config --global credential.helper store'
+abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
+abbr gt-fastcommit 'git add .; git commit -m "Commit"; git push'
 
 
 # ==========
@@ -54,12 +54,10 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 
-alias stell-alive-arts="fish ~/my-files/scripts/stell-alive.fish"
-alias stell-alive="cd ~/my-files/stell-alive/ && python ~/my-files/stell-alive/still_alive_credit.py"
-
 alias dl="cd ~/Downloads"
 alias doc="cd ~/Documents"
 alias dt="cd ~/Desktop"
+alias gt="cd ~/my-files/my-git-repos"
 
 alias reload="source ~/.config/fish/config.fish"
 alias ls='eza -al --color=always --group-directories-first --icons' # preferred listing
