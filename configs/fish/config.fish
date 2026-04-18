@@ -33,15 +33,17 @@ abbr pip-inst 'pip install --break-system-packages'
 
 
 # ==== git ==== 
-abbr gt-init 'git init'
-abbr gt-status 'git status'
-abbr gt-add-all 'git add .'
-abbr gt-commit 'git commit -m "Commit_Name"'
-abbr gt-push 'git push'
-abbr gt-pull 'git pull'
-abbr gt-log 'git log --oneline --graph'
-abbr gt-save-pass 'git config --global credential.helper store'
-abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
+abbr dcs-gt-init 'git init'
+abbr dcs-gt-status 'git status'
+abbr dcs-gt-add-all 'git add .'
+abbr dcs-gt-commit 'git commit -m "Commit_Name"'
+abbr dcs-gt-push 'git push'
+abbr dcs-gt-pull 'git pull'
+abbr dcs-gt-log 'git log --oneline --graph'
+abbr dcs-gt-save-pass 'git config --global credential.helper store'
+abbr dcs-gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
+abbr dcs-gt-fastcommit 'git add .; git commit -m "Commit"; git push'
+
 
 # ==========
 # Aliases
