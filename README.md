@@ -12,15 +12,15 @@
 - `reload` - перезавантажити конфіг fish
 
 **Git арбревіації**
-- `gt-init` - ініціалізація репозиторію
-- `gt-status` - статус репозиторію
-- `gt-add-all` - додає в комміт всі файли репо
-- `gt-commit` - створює комміт
-- `gt-push` - вивантажує комміт
-- `gt-pull` - завантажує оновлення репозиторію(треба бути в потрібному репозиторії)
-- `gt-log` - логи
-- `gt-save-pass` - зберігає данні для відвантаження(Username, Personal Access Token) у credential store
-- `gt-setup` - швидке розгортування репозиторію
+- `dcs-gt-init` - ініціалізація репозиторію
+- `dcs-gt-status` - статус репозиторію
+- `dcs-gt-add-all` - додає в комміт всі файли репо
+- `dcs-gt-commit` - створює комміт
+- `dcs-gt-push` - вивантажує комміт
+- `dcs-gt-pull` - завантажує оновлення репозиторію(треба бути в потрібному репозиторії)
+- `dcs-gt-log` - логи
+- `dcs-gt-save-pass` - зберігає данні для відвантаження(Username, Personal Access Token) у credential store
+- `dcs-gt-setup` - швидке розгортування репозиторію
 
 **Mirrors:**
 - `mir-arch` / `mir-blac` / `mir-chao` - оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
@@ -40,7 +40,7 @@
 - `map` - інтерактивна карта світу в терміналі
 
 **DeltaCat Scripts (`dcs-`):**
-> Використання рекомендоване через dcs- +Tab
+> Зроблено для швидкого використання комманд через dcs- +Tab
 - `dcs-health-analyze` - стан батареї та SSD
 - `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-grub-cmdline` - керування GRUB
 - `dcs-pacman-edit` / `dcs-pacman-clear` / `dcs-pacman-unlock` - керування pacman
