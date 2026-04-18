@@ -11,6 +11,16 @@
 - `please` - `sudo`
 - `reload` - перезавантажити конфіг fish
 
+**Git арбревіації**
+- `gt-init`
+- gt-status
+- gt-add-all
+- gt-commit
+- gt-push
+- gt-pull
+- gt-log
+- gt-save-pass 
+
 **Mirrors:**
 - `mir-arch` / `mir-blac` / `mir-chao` - оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
 - `mir-cach` / `mir-cach3` / `mir-cach4` - оновлення mirrorlist для CachyOS репозиторіїв
@@ -29,6 +39,7 @@
 - `map` - інтерактивна карта світу в терміналі
 
 **DeltaCat Scripts (`dcs-`):**
+> Використання рекомендоване через dcs- +Tab
 - `dcs-health-analyze` - стан батареї та SSD
 - `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-grub-cmdline` - керування GRUB
 - `dcs-pacman-edit` / `dcs-pacman-clear` / `dcs-pacman-unlock` - керування pacman
