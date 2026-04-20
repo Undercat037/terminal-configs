@@ -36,16 +36,17 @@ time_format = "%Y/%m/%d][%H:%M:%S"
 disabled = false
 
 [cmd_duration]
-format = " [took](cyan) [$duration](bold magenta)"
+format = '\[[took $duration]($style)\]'
+style = "bold cyan"
 min_time = 1000
 
 [character]
-success_symbol = "[❯❯](bold green)"
+success_symbol = "[❯❯](bold purple)"
 error_symbol = "[x❯](bold red)"
 
 [python]
 format = '\[[🐍 $version (\($virtualenv\))]($style)\]'
-style = 'bold cyan'
+style = 'bold #eaff64'
 
 [rust]
 format = '\[[🦀 $version]($style)\]'
@@ -58,7 +59,7 @@ style = 'bold purple'
 
 [git_status]
 format = '[$all_status$ahead_behind]($style)\]'
-style = 'bold yellow'
+style = 'bold purple'
 conflicted = '🏳 '
 ahead = '⇡${count} '
 behind = '⇣${count} '
