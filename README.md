@@ -57,3 +57,9 @@
 - `dcs-rust-aarch-build` / `dcs-rust-aarch-build-rel` - збірка під aarch64-linux-android
 - `dcs-rustbookua-setup` - встановлення rustbook з українським перекладом
 - `dcs-rustbookua` - запуск rustbook
+
+**Screenshots:**
+![terminals](examples/terminals.png)
+![ff](examples/ff.png)
+![ffc](examples/ffc.png)
+![ffh](examples/ffh.png)
