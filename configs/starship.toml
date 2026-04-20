@@ -44,12 +44,32 @@ success_symbol = "[❯❯](bold green)"
 error_symbol = "[x❯](bold red)"
 
 [python]
-format = '[(${virtualenv})─](bold cyan)'
+format = '\[[🐍 $version (\($virtualenv\))]($style)\]'
+style = 'bold cyan'
+
+[rust]
+format = '\[[🦀 $version]($style)\]'
+style = 'bold #dea584'
 
 [git_branch]
-disabled = false
+format = ' \[[$symbol$branch]($style) '
+symbol = ' '
+style = 'bold purple'
+
 [git_status]
-disabled = false
+format = '[$all_status$ahead_behind]($style)\]'
+style = 'bold yellow'
+conflicted = '🏳 '
+ahead = '⇡${count} '
+behind = '⇣${count} '
+diverged = '⇕ '
+untracked = ' '
+stashed = '📦 '
+modified = ' '
+staged = '✓ '
+renamed = '⇢ '
+deleted = '✘ '
+
 [package]
 disabled = true
 [line_break]
