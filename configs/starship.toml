@@ -36,7 +36,7 @@ time_format = "%Y/%m/%d][%H:%M:%S"
 disabled = false
 
 [cmd_duration]
-format = '\[[took $duration]($style)\]'
+format = '[\[$duration\]]($style)'
 style = "bold cyan"
 min_time = 1000
 
