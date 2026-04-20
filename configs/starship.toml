@@ -49,9 +49,9 @@ error_symbol = "[x❯](bold red)"
 format = '[(${virtualenv})─](bold cyan)'
 
 [git_branch]
-disabled = true
+disabled = false
 [git_status]
-disabled = true
+disabled = false
 [package]
 disabled = true
 [line_break]
