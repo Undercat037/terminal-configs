@@ -111,7 +111,13 @@ alias dcs-btrfs-balace='sudo btrfs balance start -dusage=90 / '
 alias dcs-grub-edit='sudo nano /etc/default/grub'
 alias dcs-grub-upgrade='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias dcs-grub-cmdline='cat /etc/default/grub | grep "GRUB_CMDLINE_LINUX_DEFAULT" '
+
 alias dcs-dracut-rebuild='sudo dracut rebuild --force'
+alias dcs-dracut-edit='sudo nano /etc/dracut.conf.d/myflags.conf'
+alias dcs-dracut-conf='cat /etc/dracut.conf.d/myflags.conf'
+
+alias dcs-modprobe-edit='sudo nano /etc/modprobe.d/nvidia.conf'
+alias dcs-modprobe-conf='cat /etc/modprobe.d/nvidia.conf'
 
 alias dcs-fish-edit='nano ~/.config/fish/config.fish'
 
