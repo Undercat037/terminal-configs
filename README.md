@@ -62,4 +62,4 @@
 ![terminals](examples/terminals.png)
 ![ff](examples/ff.png)
 ![ffc](examples/ffc.png)
-![ffh](examples/ffh.png)
+![ffhg](examples/ffh.png)
