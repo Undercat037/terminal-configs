@@ -152,7 +152,7 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 # Реалізація через функції, знаходяться далі(притримуюсь принципу монолітного конфігу)
 #dcs-dracut-rebuild - працює ідеально
 
-#dcs-garuda-update - v0.3 поки тестується
+#dcs-garuda-update - v0.4 поки тестується
 alias dcs-garuda-update-aur='dcs-garuda-update --aur'
 alias dcs-garuda-update-noconfirm='dcs-garuda-update --noconfirm'
 alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
@@ -165,26 +165,58 @@ end
 # ==================================
 # dcs-dracut-rebuild
 # ==================================
+# Port of /usr/share/libalpm/scripts/dracut-install-garuda
+# Трекинг ошибок: /var/lib/garuda/initramfs_error
 function dcs-dracut-rebuild
-    for pkgbase_file in /usr/lib/modules/*/pkgbase
-        set kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $pkgbase_file)
-        set pkgbase (cat $pkgbase_file)
-        echo ":: Building initramfs for $pkgbase ($kver)"
-        sudo dracut --force --no-hostonly-cmdline --hostonly -L 3 /boot/initramfs-$pkgbase.img --kver $kver
-        echo ":: Building fallback initramfs for $pkgbase ($kver)"
-        sudo dracut --force --no-hostonly-cmdline --no-hostonly -L 1 -o "network rdma" /boot/initramfs-$pkgbase-fallback.img --kver $kver
+    if test (id -u) -ne 0
+        sudo fish -c "source ~/.config/fish/config.fish; dcs-dracut-rebuild"
+        return $status
     end
+ 
+    set -l error_file /var/lib/garuda/initramfs_error
+    set -l overall_status 0
+ 
+    for pkgbase_file in /usr/lib/modules/*/pkgbase
+        set -l kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $pkgbase_file)
+        set -l pkgbase (cat $pkgbase_file)
+ 
+        # Пропускаем ядра не принадлежащие ни одному пакету (резервные копии модулей)
+        if not pacman -Qqo $pkgbase_file >/dev/null 2>&1
+            set_color yellow; echo ":: Skipping $pkgbase ($kver) — not owned by any package"; set_color normal
+            continue
+        end
+ 
+        echo ":: Building initramfs for $pkgbase ($kver)"
+        set -l dracut_ok 1
+        dracut --force --no-hostonly-cmdline --hostonly -L 3 /boot/initramfs-$pkgbase.img --kver $kver
+        or set dracut_ok 0
+ 
+        if test $dracut_ok -eq 1
+            echo ":: Building fallback initramfs for $pkgbase ($kver)"
+            dracut --force --no-hostonly-cmdline --no-hostonly -L 1 -o "network rdma" /boot/initramfs-$pkgbase-fallback.img --kver $kver
+            or set dracut_ok 0
+        end
+ 
+        if test $dracut_ok -eq 1
+            if test -f $error_file
+                sed -i "/$pkgbase/d" $error_file
+                not test -s $error_file; and rm -f $error_file
+            end
+        else
+            set_color red; echo ":: Failed to build initramfs for $pkgbase ($kver)"; set_color normal
+            echo $pkgbase >> $error_file
+            set overall_status 1
+        end
+    end
+ 
+    return $overall_status
 end
-
-
-
+ 
+ 
 # ==================================
 # dcs-garuda-update
 # Port: /usr/bin/garuda-update + main-update + update-helper-scripts
 # Deps: pacman sudo | Opt: rate-mirrors/reflector paru/yay dracut grub
-# Из update-helper-scripts встроено:
-#   pre-update:  обновление кейрингов (archlinux-keyring, chaotic-keyring, blackarch-keyring)
-#   end-routines: plocate, bat cache, fish completions (через systemd --no-block)
 # Не встроено (Garuda-специфично): package-replaces, update_hotfixes, migrate-garuda-repo
 # ==================================
 function dcs-garuda-update --description "Portable pacman system updater"
