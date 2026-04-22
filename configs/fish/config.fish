@@ -152,7 +152,7 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 # Реалізація через функції, знаходяться далі(притримуюсь принципу монолітного конфігу)
 #dcs-dracut-rebuild - працює ідеально
 
-#dcs-garuda-update - v0.2 поки тестується
+#dcs-garuda-update - v0.3 поки тестується
 alias dcs-garuda-update-aur='dcs-garuda-update --aur'
 alias dcs-garuda-update-noconfirm='dcs-garuda-update --noconfirm'
 alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
@@ -177,10 +177,15 @@ function dcs-dracut-rebuild
 end
 
 
+
 # ==================================
 # dcs-garuda-update
-# Port: /usr/bin/garuda-update + /usr/lib/garuda/garuda-update/main-update
-# Deps: pacman sudo | Opt: rate-mirrors/reflector paru/yay dracut
+# Port: /usr/bin/garuda-update + main-update + update-helper-scripts
+# Deps: pacman sudo | Opt: rate-mirrors/reflector paru/yay dracut grub
+# Из update-helper-scripts встроено:
+#   pre-update:  обновление кейрингов (archlinux-keyring, chaotic-keyring, blackarch-keyring)
+#   end-routines: plocate, bat cache, fish completions (через systemd --no-block)
+# Не встроено (Garuda-специфично): package-replaces, update_hotfixes, migrate-garuda-repo
 # ==================================
 function dcs-garuda-update --description "Portable pacman system updater"
  
@@ -215,11 +220,10 @@ function dcs-garuda-update --description "Portable pacman system updater"
     # ── Эскалация прав ───────────────────────────────────────────────────────
     if test (id -u) -ne 0
         set -l rerun
-        test $do_aur -eq 1;     and set -a rerun --aur
+        test $do_aur -eq 1;      and set -a rerun --aur
         test $skip_mirror -eq 1; and set -a rerun --skip-mirrorlist
-        test $noconfirm -eq 1;  and set -a rerun --noconfirm
+        test $noconfirm -eq 1;   and set -a rerun --noconfirm
         set -a rerun $extra_opts
-        # Не exec — иначе терминал закроется вместе с sudo-сессией
         sudo fish -c "source ~/.config/fish/config.fish; dcs-garuda-update $rerun"
         return $status
     end
@@ -288,11 +292,32 @@ function dcs-garuda-update --description "Portable pacman system updater"
         echo ""
     end
  
-    # ── Garuda helper-скрипты (если есть) ────────────────────────────────────
-    set -l _has_helpers 0
-    if test -x /usr/lib/garuda/garuda-update/update-helper-scripts
-        set _has_helpers 1
-        /usr/lib/garuda/garuda-update/update-helper-scripts pre-update-routines 2>/dev/null; or true
+    # ── Pre-update: кейринги ──────────────────────────────────────────────────
+    # Port of update-helper-scripts::update_keyring_packages
+    # Обновляем кейринги первыми — иначе при устаревшем кейринге весь апдейт падает
+    set -l keyrings archlinux-keyring
+    # chaotic-keyring — если репо подключён
+    if test -f /etc/pacman.d/chaotic-mirrorlist
+        set -a keyrings chaotic-keyring
+    end
+    # blackarch-keyring — если установлен
+    if test -d /var/lib/pacman/local/blackarch-keyring-*/
+        set -a keyrings blackarch-keyring
+    end
+    # Проверяем есть ли обновления для кейрингов
+    set -l keyring_updates (pacman -Qu $keyrings 2>/dev/null)
+    if test -n "$keyring_updates"
+        set_color yellow; echo "--> Updating keyrings first..."; set_color normal
+        set -l keyring_exit 0
+        SNAP_PAC_SKIP=y SKIP_AUTOSNAP='' pacman -S --needed --noconfirm $keyrings
+        or set keyring_exit $status
+        if test $keyring_exit -ne 0
+            set -a _warnings "Keyring update failed (exit $keyring_exit) — continuing anyway"
+        else
+            # Кейринги обновились — форсируем пересинк БД
+            set db_flag -yy
+        end
+        echo ""
     end
  
     # ── Сборка аргументов pacman ──────────────────────────────────────────────
@@ -301,12 +326,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
  
     set -l pacman_args -Su $db_flag
     test $noconfirm -eq 1; and set -a pacman_args --noconfirm
- 
-    if test $_has_helpers -eq 1
-        set -l replaces (/usr/lib/garuda/garuda-update/update-helper-scripts package-replaces 2>/dev/null)
-        for r in $replaces; set -a pacman_args $r; end
-    end
- 
     for o in $extra_opts; set -a pacman_args $o; end
  
     # ── Обновление ───────────────────────────────────────────────────────────
@@ -319,11 +338,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
     if test $pacman_exit -ne 0
         set -a _errors "pacman exited with code $pacman_exit"
         set_color red; echo "pacman failed (exit $pacman_exit)."; set_color normal
-    end
- 
-    # ── Post-update хуки ─────────────────────────────────────────────────────
-    if test $_has_helpers -eq 1
-        /usr/lib/garuda/garuda-update/update-helper-scripts post-update-routines 2>/dev/null; or true
     end
  
     # ── AUR ───────────────────────────────────────────────────────────────────
@@ -347,11 +361,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
         end
     end
  
-    # ── End-routines ─────────────────────────────────────────────────────────
-    if test $_has_helpers -eq 1
-        /usr/lib/garuda/garuda-update/update-helper-scripts end-routines 2>/dev/null; or true
-    end
- 
     # ── dracut rebuild ────────────────────────────────────────────────────────
     set -l dracut_exit 0
     if command -q dracut
@@ -360,7 +369,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
             dcs-dracut-rebuild
             or begin; set dracut_exit $status; set -a _errors "dcs-dracut-rebuild failed (exit $dracut_exit)"; end
         else
-            # Fallback: голый dracut без знания путей — может не работать на EFI/UKI
             set -a _warnings "dcs-dracut-rebuild not found — bare dracut fallback (may fail on EFI/UKI)"
             set_color yellow; echo "  dcs-dracut-rebuild not found, using bare dracut"; set_color normal
             for kdir in /usr/lib/modules/*/
@@ -370,6 +378,20 @@ function dcs-garuda-update --description "Portable pacman system updater"
                 or begin; set dracut_exit $status; set -a _errors "dracut failed for $kver (exit $dracut_exit)"; end
             end
         end
+    end
+ 
+    # ── GRUB rebuild (если установлен) ───────────────────────────────────────
+    set -l grub_exit 0
+    if command -q grub-mkconfig; and test -f /boot/grub/grub.cfg
+        set_color yellow; echo ""; echo "--> Updating GRUB config..."; set_color normal
+        grub-mkconfig -o /boot/grub/grub.cfg
+        or begin; set grub_exit $status; set -a _errors "grub-mkconfig failed (exit $grub_exit)"; end
+    end
+ 
+    # ── End-routines ─────────────────────────────────────────────────────────
+    # plocate index (фоново, чтобы locate видел новые файлы)
+    if test -x /usr/bin/locate
+        systemctl start plocate-updatedb.service --no-block 2>/dev/null; or true
     end
  
     # ── Garuda: changelog / notices ──────────────────────────────────────────
@@ -417,6 +439,13 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color red; echo "    ✘ initramfs rebuild (exit $dracut_exit)"; set_color normal
         end
     end
+    if command -q grub-mkconfig; and test -f /boot/grub/grub.cfg
+        if test $grub_exit -eq 0
+            echo "    ✔ grub-mkconfig"
+        else
+            set_color red; echo "    ✘ grub-mkconfig (exit $grub_exit)"; set_color normal
+        end
+    end
  
     if test (count $_warnings) -gt 0
         echo ""
@@ -438,11 +467,13 @@ function dcs-garuda-update --description "Portable pacman system updater"
                     echo "    • dcs-garuda-update --skip-mirrorlist     — skip mirror refresh"
                     echo "    • sudo pacman -Syuu                       — allow downgrades"
                 case "paru*" "yay*"
-                    echo "    • Run paru/yay manually: paru -Sua"
+                    echo "    • paru -Sua  /  yay -Sua"
                 case "dcs-dracut-rebuild*" "dracut failed*"
                     echo "    • sudo dcs-dracut-rebuild"
                     echo "    • Check boot partition: ls /boot/ /boot/efi/"
-                    echo "    • Log: $logfile"
+                case "grub-mkconfig*"
+                    echo "    • sudo grub-mkconfig -o /boot/grub/grub.cfg"
+                    echo "    • sudo dcs-grub-upgrade"
             end
         end
     end

@@ -49,7 +49,6 @@
 - `dcs-health-analyze` - стан батареї та SSD
 - `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-grub-cmdline` - керування GRUB
 - `dcs-pacman-edit` / `dcs-pacman-clear` / `dcs-pacman-unlock` - керування pacman
-- `dcs-dracut-rebuild` - перебудова initramfs(портований у функцію скрипт garuda)
 - `dcs-dracut-edit` / `dcs-dracut-conf` - редагування та вивід /etc/dracut.conf.d/myflags.conf
 - `dcs-nvmodprobe-edit` / `dcs-nvmodprobe-conf` - редагування та вивід /etc/modprobe.d/nvidia.conf
 - `dcs-btrfs-balace` - балансування BTRFS розділу
@@ -63,6 +62,10 @@
 - `dcs-rust-aarch-build` / `dcs-rust-aarch-build-rel` - збірка під aarch64-linux-android
 - `dcs-rustbookua-setup` - встановлення rustbook з українським перекладом
 - `dcs-rustbookua` - запуск rustbook
+
+**DeltaCat Scripts Ports**
+- `dcs-dracut-rebuild` - перебудова initramfs(портований скрипт з garuda)
+- `dcs-garuda-update` - повне оновлення системи (порт garuda-update)(кейрінги, дзеркала, пакети, initramfs(dracut), grub) Флаги: --aur, --noconfirm, --skip-mirrorlist
 
 **Screenshots:**
 ![terminals](examples/terminals.png)
