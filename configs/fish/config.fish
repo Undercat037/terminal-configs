@@ -28,6 +28,9 @@ abbr wget 'wget -c '
 
 abbr tarnow 'tar -acf '
 abbr untar 'tar -zxvf '
+abbr 7znow '7z a'
+abbr un7z '7z x'
+
 
 abbr pip-inst 'pip install --break-system-packages'
 
