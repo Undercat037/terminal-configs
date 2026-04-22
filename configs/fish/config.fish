@@ -149,13 +149,22 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 # =========================
 #  DeltaCat Scripts Ports
 # =========================
-# Реалізація через функції далі
-#dcs-dracut-rebuild
-#dcs-garuda-update - v0.1 поки тестується, є баги
+# Реалізація через функції, знаходяться далі(притримуюсь принципу монолітного конфігу)
+#dcs-dracut-rebuild - працює ідеально
+
+#dcs-garuda-update - v0.2 поки тестується
+alias dcs-garuda-update-aur='dcs-garuda-update --aur'
+alias dcs-garuda-update-noconfirm='dcs-garuda-update --noconfirm'
+alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
+
+
 
 end
 
 
+# ==================================
+# dcs-dracut-rebuild
+# ==================================
 function dcs-dracut-rebuild
     for pkgbase_file in /usr/lib/modules/*/pkgbase
         set kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $pkgbase_file)
@@ -167,168 +176,282 @@ function dcs-dracut-rebuild
     end
 end
 
-# dcs-garuda-update — portable Arch/Manjaro/etc system update function for fish
-# Портировано из /usr/bin/garuda-update + /usr/lib/garuda/garuda-update/main-update
-function dcs-garuda-update --description "Portable pacman system updater (garuda-update port)"
 
-    # ── Парсинг аргументов ────────────────────────────────────────────────────
-    set -l update_aur 0
-    set -l skip_mirrorlist 0
-    set -l no_space_check 0
+# ==================================
+# dcs-garuda-update
+# Port: /usr/bin/garuda-update + /usr/lib/garuda/garuda-update/main-update
+# Deps: pacman sudo | Opt: rate-mirrors/reflector paru/yay dracut
+# ==================================
+function dcs-garuda-update --description "Portable pacman system updater"
+ 
+    # ── Флаги ────────────────────────────────────────────────────────────────
+    set -l do_aur 0
+    set -l skip_mirror 0
     set -l noconfirm 0
     set -l extra_opts
-
+    set -l _errors
+    set -l _warnings
+ 
     for arg in $argv
         switch $arg
-            case -a --aur
-                set update_aur 1
-            case --skip-mirrorlist
-                set skip_mirrorlist 1
-            case --no-space-check
-                set no_space_check 1
-            case --noconfirm
-                set noconfirm 1
+            case -a --aur;           set do_aur 1
+            case --skip-mirrorlist;  set skip_mirror 1
+            case --noconfirm;        set noconfirm 1
             case -h --help help
-                echo "Usage: dcs-garuda-update [options]"
+                set_color yellow; echo "dcs-garuda-update — portable system updater"; set_color normal
                 echo ""
-                echo "Options:"
-                echo "  -a, --aur            Also update AUR packages (paru/yay)"
-                echo "  --skip-mirrorlist    Skip mirrorlist refresh"
-                echo "  --noconfirm          Pass --noconfirm to pacman"
-                echo "  --no-space-check     Skip disk space check"
-                echo "  -h, --help           Show this help"
+                echo "  -a, --aur             Update AUR packages (paru/yay)"
+                echo "  --skip-mirrorlist     Skip mirrorlist refresh"
+                echo "  --noconfirm           Pass --noconfirm to pacman"
+                echo "  -h, --help            This help"
+                echo ""
+                echo "  Aliases: dcs-update  dcs-update-aur  dcs-update-noconfirm  dcs-update-skip-mirror"
                 return 0
-            case --
-                # ignore separator
-            case '*'
-                set -a extra_opts $arg
+            case '--'
+            case '*'; set -a extra_opts $arg
         end
     end
-
-    # ── Цвета ─────────────────────────────────────────────────────────────────
-    set -l R  '\033[1;31m'
-    set -l Y  '\033[1;33m'
-    set -l B  '\033[1;34m'
-    set -l G  '\033[1;32m'
-    set -l NC '\033[0m'
-
-    # ── Проверка: запущено ли от рута ─────────────────────────────────────────
+ 
+    # ── Эскалация прав ───────────────────────────────────────────────────────
     if test (id -u) -ne 0
-        set -l env_passthrough UPDATE_AUR=$update_aur SKIP_MIRRORLIST=$skip_mirrorlist
-        # Пересобираем аргументы для sudo-вызова
-        set -l rerun_args
-        test $update_aur -eq 1;        and set -a rerun_args --aur
-        test $skip_mirrorlist -eq 1;   and set -a rerun_args --skip-mirrorlist
-        test $no_space_check -eq 1;    and set -a rerun_args --no-space-check
-        test $noconfirm -eq 1;         and set -a rerun_args --noconfirm
-        set -a rerun_args $extra_opts
-        exec sudo fish -c "source ~/.config/fish/config.fish; dcs-garuda-update $rerun_args"
-        return 1
+        set -l rerun
+        test $do_aur -eq 1;     and set -a rerun --aur
+        test $skip_mirror -eq 1; and set -a rerun --skip-mirrorlist
+        test $noconfirm -eq 1;  and set -a rerun --noconfirm
+        set -a rerun $extra_opts
+        # Не exec — иначе терминал закроется вместе с sudo-сессией
+        sudo fish -c "source ~/.config/fish/config.fish; dcs-garuda-update $rerun"
+        return $status
     end
-
-    # ── Проверка: не загружены ли мы в snapshot ───────────────────────────────
+ 
+    # ── Снапшот-проверка ─────────────────────────────────────────────────────
     if grep -qE 'subvol=@/.snapshots/[0-9]+/snapshot' /proc/cmdline 2>/dev/null
-        echo -e "$R""Error: You are booted into a snapshot. Restore it before updating.$NC"
+        and not set -q GARUDA_SNAPSHOT_PACMAN
+        set_color red
+        echo "Error: booted into snapshot. Restore it before updating."
+        echo "  Override: GARUDA_SNAPSHOT_PACMAN=1 dcs-garuda-update"
+        set_color normal
         return 1
     end
-
-    # ── Лог-файл ──────────────────────────────────────────────────────────────
-    set -l logdir /var/log/dcs-update
-    mkdir -p -m 755 $logdir 2>/dev/null; or true
-    set -l logfile $logdir/update.log
+ 
+    # ── Лог ──────────────────────────────────────────────────────────────────
+    set -l logfile /var/log/dcs-update.log
+    mkdir -p (dirname $logfile) 2>/dev/null
     echo "" >> $logfile
-    echo ">-<->-< dcs-garuda-update at "(date +"%Y-%m-%d %R %Z") >> $logfile 2>/dev/null; or true
-
-    # ── Обновление mirrorlist ─────────────────────────────────────────────────
-    set -l db_flag "-y"   # станет "-yy" если mirrorlist успешно обновлён
-
-    if test $skip_mirrorlist -eq 0
+    echo ">-<->-< dcs-garuda-update "(date +"%Y-%m-%d %R %Z") >> $logfile 2>/dev/null
+ 
+    # ── Mirrorlist ────────────────────────────────────────────────────────────
+    set -l db_flag -y
+ 
+    if test $skip_mirror -eq 0
         if command -q rate-mirrors
-            echo -e "\n$Y-->$B Refreshing mirrorlist with rate-mirrors... 🍵$NC"
+            set_color yellow; echo ""; echo "--> Refreshing mirrorlist (rate-mirrors)... 🍵"; set_color normal
             set -l tmp (mktemp)
             if rate-mirrors --allow-root --save=$tmp arch --max-delay=21600 >/dev/null 2>&1
                 set -l cnt (grep -Ec "^Server *= *" $tmp 2>/dev/null; or echo 0)
                 if test "$cnt" -ge 10
                     install -m644 $tmp /etc/pacman.d/mirrorlist
-                    set db_flag "-yy"
-                    echo -e "$G Mirrorlist updated ($cnt mirrors).$NC"
+                    set db_flag -yy
+                    set_color green; echo "  Mirrorlist updated ($cnt mirrors)."; set_color normal
                 else
-                    echo -e "$Y Mirrorlist too short ($cnt mirrors), skipping.$NC"
+                    set -a _warnings "Mirrorlist too short ($cnt mirrors) — skipped"
+                    set_color yellow; echo "  Too short ($cnt mirrors), skipped."; set_color normal
                 end
             else
-                echo -e "$Y Failed to update mirrorlist via rate-mirrors.$NC"
+                set -a _warnings "rate-mirrors failed — mirrorlist not updated"
+                set_color yellow; echo "  rate-mirrors failed."; set_color normal
             end
             rm -f $tmp
+ 
         else if command -q reflector
-            echo -e "\n$Y-->$B Refreshing mirrorlist with reflector... 🍵$NC"
+            set_color yellow; echo ""; echo "--> Refreshing mirrorlist (reflector)... 🍵"; set_color normal
             set -l tmp (mktemp)
             if reflector --latest 10 --age 2 --fastest 10 --protocol https --sort rate --save $tmp 2>/dev/null
                 set -l cnt (grep -Ec "^Server *= *" $tmp 2>/dev/null; or echo 0)
                 if test "$cnt" -ge 5
                     install -m644 $tmp /etc/pacman.d/mirrorlist
-                    set db_flag "-yy"
-                    echo -e "$G Mirrorlist updated ($cnt mirrors).$NC"
+                    set db_flag -yy
+                    set_color green; echo "  Mirrorlist updated ($cnt mirrors)."; set_color normal
                 else
-                    echo -e "$Y Mirrorlist too short ($cnt mirrors), skipping.$NC"
+                    set -a _warnings "Mirrorlist too short ($cnt mirrors) — skipped"
+                    set_color yellow; echo "  Too short ($cnt mirrors), skipped."; set_color normal
                 end
             else
-                echo -e "$Y Failed to update mirrorlist via reflector.$NC"
+                set -a _warnings "reflector failed — mirrorlist not updated"
+                set_color yellow; echo "  reflector failed."; set_color normal
             end
             rm -f $tmp
+ 
+        else
+            set -a _warnings "No mirrorlist tool found (rate-mirrors / reflector)"
         end
         echo ""
     end
-
+ 
+    # ── Garuda helper-скрипты (если есть) ────────────────────────────────────
+    set -l _has_helpers 0
+    if test -x /usr/lib/garuda/garuda-update/update-helper-scripts
+        set _has_helpers 1
+        /usr/lib/garuda/garuda-update/update-helper-scripts pre-update-routines 2>/dev/null; or true
+    end
+ 
     # ── Сборка аргументов pacman ──────────────────────────────────────────────
+    set -l pacman_bin pacman
+    set -q PACMAN_EXE; and set pacman_bin $PACMAN_EXE
+ 
     set -l pacman_args -Su $db_flag
-
     test $noconfirm -eq 1; and set -a pacman_args --noconfirm
-    test (count $extra_opts) -gt 0; and set -a pacman_args $extra_opts
-
-    # ── Запуск обновления ─────────────────────────────────────────────────────
-    echo -e "\n$Y-->$B Running: pacman $pacman_args$NC\n"
-
-    if not pacman $pacman_args
-        echo -e "\n$R pacman exited with error$NC"
-        return 1
+ 
+    if test $_has_helpers -eq 1
+        set -l replaces (/usr/lib/garuda/garuda-update/update-helper-scripts package-replaces 2>/dev/null)
+        for r in $replaces; set -a pacman_args $r; end
     end
-
+ 
+    for o in $extra_opts; set -a pacman_args $o; end
+ 
+    # ── Обновление ───────────────────────────────────────────────────────────
+    set_color yellow; echo "--> $pacman_bin $pacman_args"; set_color normal; echo ""
+ 
+    set -l pacman_exit 0
+    $pacman_bin $pacman_args
+    or set pacman_exit $status
+ 
+    if test $pacman_exit -ne 0
+        set -a _errors "pacman exited with code $pacman_exit"
+        set_color red; echo "pacman failed (exit $pacman_exit)."; set_color normal
+    end
+ 
+    # ── Post-update хуки ─────────────────────────────────────────────────────
+    if test $_has_helpers -eq 1
+        /usr/lib/garuda/garuda-update/update-helper-scripts post-update-routines 2>/dev/null; or true
+    end
+ 
     # ── AUR ───────────────────────────────────────────────────────────────────
-    if test $update_aur -eq 1
+    set -l aur_exit 0
+    if test $do_aur -eq 1
         set -l real_uid $SUDO_UID
-        if test -z "$real_uid"; and test -n "$SUDO_USER"
-            set real_uid (id -u $SUDO_USER 2>/dev/null)
-        end
-
-        if command -q paru; and test -n "$real_uid"
-            echo -e "\n$Y-->$B Updating AUR packages with paru..$NC"
+        test -z "$real_uid"; and test -n "$SUDO_USER"
+            and set real_uid (id -u $SUDO_USER 2>/dev/null)
+ 
+        if test -x /usr/bin/paru; and test -n "$real_uid"
+            set_color yellow; echo ""; echo "--> Updating AUR (paru).."; set_color normal
             sudo -u "#$real_uid" paru -Sua
-            or echo -e "$R paru exited with error $status$NC"
-        else if command -q yay; and test -n "$real_uid"
-            echo -e "\n$Y-->$B Updating AUR packages with yay..$NC"
+            or begin; set aur_exit $status; set -a _errors "paru exited with code $aur_exit"; end
+        else if test -x /usr/bin/yay; and test -n "$real_uid"
+            set_color yellow; echo ""; echo "--> Updating AUR (yay).."; set_color normal
             sudo -u "#$real_uid" yay -Sua
-            or echo -e "$R yay exited with error $status$NC"
+            or begin; set aur_exit $status; set -a _errors "yay exited with code $aur_exit"; end
         else
-            echo -e "\n$Y--> --aur specified but no supported AUR helper found (paru/yay) ❌$NC"
+            set -a _warnings "--aur: no AUR helper found (paru/yay)"
+            set_color yellow; echo "--> --aur: no AUR helper found ❌"; set_color normal
         end
     end
-
-    # ── dracut rebuild (если установлен) ──────────────────────────────────────
-    # Если уже есть портированная функция dracut-rebuild — вызываем её,
-    # иначе делаем минимальный rebuild самостоятельно.
-    if functions -q dracut-rebuild
-        echo -e "\n$Y-->$B Running dracut-rebuild...$NC"
-        dracut-rebuild
-    else if command -q dracut
-        echo -e "\n$Y-->$B Rebuilding initramfs with dracut...$NC"
-        for kdir in /usr/lib/modules/*/
-            set -l kver (basename $kdir)
-            echo -e "$B  -> $kver$NC"
-            dracut --force --kver $kver
+ 
+    # ── End-routines ─────────────────────────────────────────────────────────
+    if test $_has_helpers -eq 1
+        /usr/lib/garuda/garuda-update/update-helper-scripts end-routines 2>/dev/null; or true
+    end
+ 
+    # ── dracut rebuild ────────────────────────────────────────────────────────
+    set -l dracut_exit 0
+    if command -q dracut
+        set_color yellow; echo ""; echo "--> Rebuilding initramfs..."; set_color normal
+        if functions -q dcs-dracut-rebuild
+            dcs-dracut-rebuild
+            or begin; set dracut_exit $status; set -a _errors "dcs-dracut-rebuild failed (exit $dracut_exit)"; end
+        else
+            # Fallback: голый dracut без знания путей — может не работать на EFI/UKI
+            set -a _warnings "dcs-dracut-rebuild not found — bare dracut fallback (may fail on EFI/UKI)"
+            set_color yellow; echo "  dcs-dracut-rebuild not found, using bare dracut"; set_color normal
+            for kdir in /usr/lib/modules/*/
+                set -l kver (basename $kdir)
+                set_color cyan; echo "  -> $kver"; set_color normal
+                dracut --force --kver $kver
+                or begin; set dracut_exit $status; set -a _errors "dracut failed for $kver (exit $dracut_exit)"; end
+            end
         end
     end
-
-    # ── Готово ────────────────────────────────────────────────────────────────
-    echo -e "\n$G System updated! 🐧\n$NC"
+ 
+    # ── Garuda: changelog / notices ──────────────────────────────────────────
+    if test -e /var/lib/garuda/tmp/update_notices
+        set_color green; echo ""; echo "Update notices:"; set_color cyan
+        gawk -F '\t' '{print $2}' /var/lib/garuda/tmp/update_notices
+        set_color normal
+        rm /var/lib/garuda/tmp/update_notices
+    end
+ 
+    # ── Garuda Health ─────────────────────────────────────────────────────────
+    if test -x /usr/bin/garuda-health
+        /usr/bin/garuda-health --forcetty; or true
+    end
+ 
+    # ════════════════════════════════════════════════════════════════════════
+    # Отчёт
+    # ════════════════════════════════════════════════════════════════════════
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    if test (count $_errors) -eq 0
+        set_color green; echo "  System updated successfully 🐧"; set_color normal
+    else
+        set_color red;   echo "  Update finished with errors ❌"; set_color normal
+    end
+    echo ""
+ 
+    set_color cyan; echo "  Steps:"; set_color normal
+    if test $pacman_exit -eq 0
+        echo "    ✔ pacman $pacman_args"
+    else
+        set_color red; echo "    ✘ pacman $pacman_args  (exit $pacman_exit)"; set_color normal
+    end
+    if test $do_aur -eq 1
+        if test $aur_exit -eq 0
+            echo "    ✔ AUR update"
+        else
+            set_color red; echo "    ✘ AUR update (exit $aur_exit)"; set_color normal
+        end
+    end
+    if command -q dracut
+        if test $dracut_exit -eq 0
+            echo "    ✔ initramfs rebuild"
+        else
+            set_color red; echo "    ✘ initramfs rebuild (exit $dracut_exit)"; set_color normal
+        end
+    end
+ 
+    if test (count $_warnings) -gt 0
+        echo ""
+        set_color yellow; echo "  Warnings:"; set_color normal
+        for w in $_warnings; echo "    ⚠ $w"; end
+    end
+ 
+    if test (count $_errors) -gt 0
+        echo ""
+        set_color red; echo "  Errors:"; set_color normal
+        for e in $_errors; echo "    ✘ $e"; end
+        echo ""
+        set_color yellow; echo "  Fixes:"; set_color normal
+        for e in $_errors
+            switch $e
+                case "pacman exited*"
+                    echo "    • sudo pacman -Sc && dcs-garuda-update   — clear cache, retry"
+                    echo "    • sudo pacman-key --refresh-keys          — keyring issues"
+                    echo "    • dcs-garuda-update --skip-mirrorlist     — skip mirror refresh"
+                    echo "    • sudo pacman -Syuu                       — allow downgrades"
+                case "paru*" "yay*"
+                    echo "    • Run paru/yay manually: paru -Sua"
+                case "dcs-dracut-rebuild*" "dracut failed*"
+                    echo "    • sudo dcs-dracut-rebuild"
+                    echo "    • Check boot partition: ls /boot/ /boot/efi/"
+                    echo "    • Log: $logfile"
+            end
+        end
+    end
+ 
+    echo ""
+    echo "  Log: $logfile"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+ 
+    test (count $_errors) -eq 0
 end
-
+ 
