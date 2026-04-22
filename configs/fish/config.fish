@@ -112,12 +112,11 @@ alias dcs-grub-edit='sudo nano /etc/default/grub'
 alias dcs-grub-upgrade='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias dcs-grub-cmdline='cat /etc/default/grub | grep "GRUB_CMDLINE_LINUX_DEFAULT" '
 
-alias dcs-dracut-rebuild='sudo dracut rebuild --force'
 alias dcs-dracut-edit='sudo nano /etc/dracut.conf.d/myflags.conf'
 alias dcs-dracut-conf='cat /etc/dracut.conf.d/myflags.conf'
 
-alias dcs-modprobe-edit='sudo nano /etc/modprobe.d/nvidia.conf'
-alias dcs-modprobe-conf='cat /etc/modprobe.d/nvidia.conf'
+alias dcs-nvmodprobe-edit='sudo nano /etc/modprobe.d/nvidia.conf'
+alias dcs-nvmodprobe-conf='cat /etc/modprobe.d/nvidia.conf'
 
 alias dcs-fish-edit='nano ~/.config/fish/config.fish'
 
@@ -147,3 +146,13 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 end
 
 
+function dcs-dracut-rebuild
+    for pkgbase_file in /usr/lib/modules/*/pkgbase
+        set kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $pkgbase_file)
+        set pkgbase (cat $pkgbase_file)
+        echo ":: Building initramfs for $pkgbase ($kver)"
+        sudo dracut --force --no-hostonly-cmdline --hostonly -L 3 /boot/initramfs-$pkgbase.img --kver $kver
+        echo ":: Building fallback initramfs for $pkgbase ($kver)"
+        sudo dracut --force --no-hostonly-cmdline --no-hostonly -L 1 -o "network rdma" /boot/initramfs-$pkgbase-fallback.img --kver $kver
+    end
+end
