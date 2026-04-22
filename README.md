@@ -45,7 +45,9 @@
 - `dcs-health-analyze` - стан батареї та SSD
 - `dcs-grub-edit` / `dcs-grub-upgrade` / `dcs-grub-cmdline` - керування GRUB
 - `dcs-pacman-edit` / `dcs-pacman-clear` / `dcs-pacman-unlock` - керування pacman
-- `dcs-dracut-rebuild` - перебудова initramfs
+- `dcs-dracut-rebuild` - перебудова initramfs(портований у функцію скрипт garuda)
+- `dcs-dracut-edit` / `dcs-dracut-conf` - редагування та вивід /etc/dracut.conf.d/myflags.conf
+- `dcs-nvmodprobe-edit` / `dcs-nvmodprobe-conf` - редагування та вивід /etc/modprobe.d/nvidia.conf
 - `dcs-btrfs-balace` - балансування BTRFS розділу
 - `dcs-fish-edit` - редагування конфігу fish
 - `dcs-rf-unblock` - розблокування WiFi
