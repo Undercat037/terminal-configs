@@ -47,6 +47,11 @@ abbr gt-save-pass 'git config --global credential.helper store'
 abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
 abbr gt-fastcommit 'git add .; git commit -m "fastCommit"; git push'
 
+# === journalctl ===
+abbr jlog 'journalctl -b 0 | tee ~/last-session.log'
+abbr jlog-prev 'journalctl -b -1 | tee ~/last-session-prev.log'
+abbr jlog-err 'journalctl -b 0 -p err | tee ~/last-session-errors.log'
+abbr jlog-prev-err 'journalctl -b -1 -p err | tee ~/last-session-prev-errors.log'
 
 # ==========
 # Aliases
@@ -104,11 +109,6 @@ alias bonsai='rbonsai -li'
 alias quarium='asciiquarium'
 alias rick='curl ascii.live/rick'
 alias map='telnet mapscii.me'
-
-abbr jlog='journalctl -b 0 | tee ~/last-session.log'
-abbr jlog-prev='journalctl -b -1 | tee ~/last-session-prev.log'
-abbr jlog-err='journalctl -b 0 -p err | tee ~/last-session-errors.log'
-abbr jlog-prev-err='journalctl -b -1 -p err | tee ~/last-session-prev-errors.log'
 
 # =========================
 #  DeltaCat Scripts block
