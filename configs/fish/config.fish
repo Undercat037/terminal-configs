@@ -105,6 +105,11 @@ alias quarium='asciiquarium'
 alias rick='curl ascii.live/rick'
 alias map='telnet mapscii.me'
 
+abbr jlog='journalctl -b 0 | tee ~/last-session.log'
+abbr jlog-prev='journalctl -b -1 | tee ~/last-session-prev.log'
+abbr jlog-err='journalctl -b 0 -p err | tee ~/last-session-errors.log'
+abbr jlog-prev-err='journalctl -b -1 -p err | tee ~/last-session-prev-errors.log'
+
 # =========================
 #  DeltaCat Scripts block
 # =========================
@@ -128,7 +133,7 @@ alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
 
 alias dcs-dependencies-setup='sudo pacman -Syy eza ugrep fastfetch matugen bat straship'
-alias dcs-folders-setup='mkdir -p ~/Pictures ~/Videos ~/Music ~/Documents ~/Downloads ~/Desktop ~/Games ~/Scripts ~/my-files'
+alias dcs-folders-setup='mkdir -p ~/Pictures ~/Videos ~/Music ~/Documents ~/Downloads ~/Desktop ~/Games ~/my-files/my-git-repos ~/my-files/Scripts ~/logs'
 
 alias dcs-rf-unblock='sudo rfkill unblock 1'
 
@@ -150,9 +155,9 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 #  DeltaCat Scripts Ports
 # =========================
 # Реалізація через функції, знаходяться далі(притримуюсь принципу монолітного конфігу)
-#dcs-dracut-rebuild - працює ідеально
+#dcs-dracut-rebuild - v2 працює ідеально
 
-#dcs-garuda-update - v0.4 поки тестується
+#dcs-garuda-update - v1 реліз порту
 alias dcs-garuda-update-aur='dcs-garuda-update --aur'
 alias dcs-garuda-update-noconfirm='dcs-garuda-update --noconfirm'
 alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
@@ -172,7 +177,7 @@ function dcs-dracut-rebuild
         sudo fish -c "source ~/.config/fish/config.fish; dcs-dracut-rebuild"
         return $status
     end
- 
+
     set -l error_file /var/lib/garuda/initramfs_error
     set -l overall_status 0
  
@@ -216,8 +221,6 @@ end
 # ==================================
 # dcs-garuda-update
 # Port: /usr/bin/garuda-update + main-update + update-helper-scripts
-# Deps: pacman sudo | Opt: rate-mirrors/reflector paru/yay dracut grub
-# Не встроено (Garuda-специфично): package-replaces, update_hotfixes, migrate-garuda-repo
 # ==================================
 function dcs-garuda-update --description "Portable pacman system updater"
  
@@ -333,7 +336,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
         set -a keyrings chaotic-keyring
     end
     # blackarch-keyring — если установлен
-    if test -d /var/lib/pacman/local/blackarch-keyring-*/
+    if pacman -Qq blackarch-keyring >/dev/null 2>&1
         set -a keyrings blackarch-keyring
     end
     # Проверяем есть ли обновления для кейрингов
