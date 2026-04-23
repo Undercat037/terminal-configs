@@ -132,7 +132,7 @@ alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
 alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
 
-alias dcs-dependencies-setup='sudo pacman -Syy eza ugrep fastfetch matugen bat straship'
+alias dcs-dependencies-setup='sudo pacman -Syy --needed eza ugrep fastfetch matugen bat starship rate-mirrors reflector dracut grub smartmontools upower plocate'
 alias dcs-folders-setup='mkdir -p ~/Pictures ~/Videos ~/Music ~/Documents ~/Downloads ~/Desktop ~/Games ~/my-files/my-git-repos ~/my-files/Scripts ~/logs'
 
 alias dcs-rf-unblock='sudo rfkill unblock 1'
