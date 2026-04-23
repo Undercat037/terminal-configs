@@ -43,7 +43,7 @@ abbr gt-commit 'git commit -m "Commit_Name"'
 abbr gt-push 'git push'
 abbr gt-pull 'git pull'
 abbr gt-log 'git log --oneline --graph'
-abbr gt-save-pass 'git config --global credential.helper store'
+abbr gt-save-pass 'git config --global credential.helper libsecret'
 abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
 abbr gt-fastcommit 'git add .; git commit -m "fastCommit"; git push'
 
@@ -132,7 +132,7 @@ alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
 alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
 alias dcs-pacman-unlock='sudo rm -rf /var/lib/pacman/db.lck'
 
-alias dcs-dependencies-setup='sudo pacman -Syy --needed eza ugrep fastfetch matugen bat starship rate-mirrors reflector dracut grub smartmontools upower plocate'
+alias dcs-dependencies-setup='sudo pacman -Syy --needed eza ugrep fastfetch matugen bat starship rate-mirrors reflector dracut grub smartmontools upower plocate libsecret'
 alias dcs-folders-setup='mkdir -p ~/Pictures ~/Videos ~/Music ~/Documents ~/Downloads ~/Desktop ~/Games ~/my-files/my-git-repos ~/my-files/Scripts ~/logs'
 
 alias dcs-rf-unblock='sudo rfkill unblock 1'
