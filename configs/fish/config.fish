@@ -10,9 +10,9 @@ if status is-interactive
 set --erase --universal fish_key_bindings
 set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
 set -g stell_alive "#ffb31c"
-set -x PATH /home/deltacat/.cargo/bin $PATH
+set -x PATH $HOME/.cargo/bin $PATH
 set -x ANDROID_NDK_HOME /opt/android-ndk
-set -gx PATH $PATH /home/deltacat/.lmstudio/bin
+set -gx PATH $PATH $HOME/.lmstudio/bin
 # set -x TERM xterm
 
 # ==========
@@ -114,7 +114,7 @@ alias map='telnet mapscii.me'
 #  DeltaCat Scripts block
 # =========================
 alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | grep -E "Percentage Used|Available Spare|Data Units Written"'
-alias dcs-btrfs-balace='sudo btrfs balance start -dusage=90 / '
+alias dcs-btrfs-balance='sudo btrfs balance start -dusage=90 / '
 
 alias dcs-grub-edit='sudo nano /etc/default/grub'
 alias dcs-grub-upgrade='sudo grub-mkconfig -o /boot/grub/grub.cfg'
