@@ -521,3 +521,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
     test (count $_errors) -eq 0
 end
  
+
+# Created by `pipx` on 2026-04-24 17:07:44
+set PATH $PATH /home/deltacat/.local/bin
