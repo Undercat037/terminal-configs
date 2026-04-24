@@ -110,6 +110,7 @@ alias quarium='asciiquarium'
 alias rick='curl ascii.live/rick'
 alias map='telnet mapscii.me'
 
+
 # =========================
 #  DeltaCat Scripts block
 # =========================
@@ -159,7 +160,6 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 
 #dcs-garuda-update - v1 реліз порту
 alias dcs-garuda-update-aur='dcs-garuda-update --aur'
-alias dcs-garuda-update-noconfirm='dcs-garuda-update --noconfirm'
 alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
 
 
@@ -215,9 +215,9 @@ function dcs-dracut-rebuild
     end
  
     return $overall_status
-end
+end 
  
- 
+
 # ==================================
 # dcs-garuda-update
 # Port: /usr/bin/garuda-update + main-update + update-helper-scripts
@@ -227,7 +227,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
     # ── Флаги ────────────────────────────────────────────────────────────────
     set -l do_aur 0
     set -l skip_mirror 0
-    set -l noconfirm 0
     set -l extra_opts
     set -l _errors
     set -l _warnings
@@ -236,16 +235,14 @@ function dcs-garuda-update --description "Portable pacman system updater"
         switch $arg
             case -a --aur;           set do_aur 1
             case --skip-mirrorlist;  set skip_mirror 1
-            case --noconfirm;        set noconfirm 1
             case -h --help help
                 set_color yellow; echo "dcs-garuda-update — portable system updater"; set_color normal
                 echo ""
                 echo "  -a, --aur             Update AUR packages (paru/yay)"
                 echo "  --skip-mirrorlist     Skip mirrorlist refresh"
-                echo "  --noconfirm           Pass --noconfirm to pacman"
                 echo "  -h, --help            This help"
                 echo ""
-                echo "  Aliases: dcs-update  dcs-update-aur  dcs-update-noconfirm  dcs-update-skip-mirror"
+                echo "  Aliases: dcs-update  dcs-update-aur  dcs-update-skip-mirror"
                 return 0
             case '--'
             case '*'; set -a extra_opts $arg
@@ -257,7 +254,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
         set -l rerun
         test $do_aur -eq 1;      and set -a rerun --aur
         test $skip_mirror -eq 1; and set -a rerun --skip-mirrorlist
-        test $noconfirm -eq 1;   and set -a rerun --noconfirm
         set -a rerun $extra_opts
         sudo fish -c "source ~/.config/fish/config.fish; dcs-garuda-update $rerun"
         return $status
@@ -359,8 +355,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
     set -l pacman_bin pacman
     set -q PACMAN_EXE; and set pacman_bin $PACMAN_EXE
  
-    set -l pacman_args -Su $db_flag
-    test $noconfirm -eq 1; and set -a pacman_args --noconfirm
+    set -l pacman_args -Su $db_flag --noconfirm
     for o in $extra_opts; set -a pacman_args $o; end
  
     # ── Обновление ───────────────────────────────────────────────────────────
@@ -394,6 +389,39 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set -a _warnings "--aur: no AUR helper found (paru/yay)"
             set_color yellow; echo "--> --aur: no AUR helper found ❌"; set_color normal
         end
+    end
+ 
+ 
+    # ── DKMS rebuild ─────────────────────────────────────────────────────────
+    set -l dkms_exit 0
+    if command -q dkms
+        set -l dkms_modules (dkms status 2>/dev/null | grep -c .)
+        if test -n "$dkms_modules"
+            set_color yellow; echo ""; echo "--> Rebuilding DKMS modules..."; set_color normal
+            set -l dkms_failed 0
+            for kdir in /usr/lib/modules/*/pkgbase
+                set -l kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $kdir)
+                # Только ядра принадлежащие пакету
+                if not pacman -Qqo $kdir >/dev/null 2>&1; continue; end
+                dkms autoinstall -k $kver
+                or set dkms_failed 1
+            end
+            if test $dkms_failed -eq 1
+                set dkms_exit 1
+                set -a _errors "dkms autoinstall failed for one or more kernels"
+            end
+            depmod -a
+        else
+            set_color cyan; echo ""; echo "--> DKMS: no modules installed, skipping."; set_color normal
+        end
+    end
+ 
+    # ── Locale rebuild ────────────────────────────────────────────────────────
+    set -l locale_exit 0
+    if command -q locale-gen; and test -f /etc/locale.gen
+        set_color yellow; echo ""; echo "--> Regenerating locales..."; set_color normal
+        locale-gen
+        or begin; set locale_exit $status; set -a _errors "locale-gen failed (exit $locale_exit)"; end
     end
  
     # ── dracut rebuild ────────────────────────────────────────────────────────
@@ -467,6 +495,23 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color red; echo "    ✘ AUR update (exit $aur_exit)"; set_color normal
         end
     end
+    if command -q dkms
+        set -l _has_dkms_mods (dkms status 2>/dev/null | grep -c .)
+        if test -n "$_has_dkms_mods"
+            if test $dkms_exit -eq 0
+                echo "    ✔ DKMS rebuild"
+            else
+                set_color red; echo "    ✘ DKMS rebuild (exit $dkms_exit)"; set_color normal
+            end
+        end
+    end
+    if command -q locale-gen; and test -f /etc/locale.gen
+        if test $locale_exit -eq 0
+            echo "    ✔ locale-gen"
+        else
+            set_color red; echo "    ✘ locale-gen (exit $locale_exit)"; set_color normal
+        end
+    end
     if command -q dracut
         if test $dracut_exit -eq 0
             echo "    ✔ initramfs rebuild"
@@ -503,6 +548,13 @@ function dcs-garuda-update --description "Portable pacman system updater"
                     echo "    • sudo pacman -Syuu                       — allow downgrades"
                 case "paru*" "yay*"
                     echo "    • paru -Sua  /  yay -Sua"
+                case "dkms autoinstall*"
+                    echo "    • sudo dkms autoinstall              — retry all modules"
+                    echo "    • dkms status                        — check module state"
+                    echo "    • sudo pacman -S linux-headers        — missing headers?"
+                case "locale-gen*"
+                    echo "    • sudo locale-gen                    — retry"
+                    echo "    • check /etc/locale.gen for enabled locales"
                 case "dcs-dracut-rebuild*" "dracut failed*"
                     echo "    • sudo dcs-dracut-rebuild"
                     echo "    • Check boot partition: ls /boot/ /boot/efi/"
@@ -521,6 +573,4 @@ function dcs-garuda-update --description "Portable pacman system updater"
     test (count $_errors) -eq 0
 end
  
-
-# Created by `pipx` on 2026-04-24 17:07:44
-set PATH $PATH /home/deltacat/.local/bin
+ 
