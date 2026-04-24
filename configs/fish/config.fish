@@ -158,7 +158,7 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 # Реалізація через функції, знаходяться далі(притримуюсь принципу монолітного конфігу)
 #dcs-dracut-rebuild - v2 працює ідеально
 
-#dcs-garuda-update - v1 реліз порту
+#dcs-garuda-update - v1.6
 alias dcs-garuda-update-aur='dcs-garuda-update --aur'
 alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
 
@@ -217,7 +217,9 @@ function dcs-dracut-rebuild
     return $overall_status
 end 
  
-
+  
+ 
+ 
 # ==================================
 # dcs-garuda-update
 # Port: /usr/bin/garuda-update + main-update + update-helper-scripts
@@ -395,24 +397,41 @@ function dcs-garuda-update --description "Portable pacman system updater"
     # ── DKMS rebuild ─────────────────────────────────────────────────────────
     set -l dkms_exit 0
     if command -q dkms
-        set -l dkms_modules (dkms status 2>/dev/null | grep -c .)
-        if test -n "$dkms_modules"
-            set_color yellow; echo ""; echo "--> Rebuilding DKMS modules..."; set_color normal
-            set -l dkms_failed 0
-            for kdir in /usr/lib/modules/*/pkgbase
-                set -l kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $kdir)
-                # Только ядра принадлежащие пакету
-                if not pacman -Qqo $kdir >/dev/null 2>&1; continue; end
-                dkms autoinstall -k $kver
+        set -l dkms_failed 0
+        set -l dkms_ran 0
+        for kdir in /usr/lib/modules/*/pkgbase
+            set -l kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $kdir)
+            # Пропускаем ядра не принадлежащие пакету
+            if not pacman -Qqo $kdir >/dev/null 2>&1; continue; end
+            # Пропускаем если headers не установлены
+            if not test -d /usr/lib/modules/$kver/build
+                set_color yellow; echo "  DKMS: skipping $kver — headers not found"; set_color normal
+                continue
+            end
+            # Берём только модули зарегистрированные именно для этого kver
+            set -l modules_for_kver (dkms status -k $kver 2>/dev/null | grep -v '^$')
+            if test -z "$modules_for_kver"
+                set_color cyan; echo "  DKMS: no modules for $kver, skipping"; set_color normal
+                continue
+            end
+            set dkms_ran 1
+            set_color yellow; echo ""; echo "--> Rebuilding DKMS modules for $kver..."; set_color normal
+            # Собираем каждый модуль явно через dkms install
+            for mod_line in $modules_for_kver
+                # формат: "module/version, kver, arch: installed"
+                set -l mod_ver (string replace -r ',.*' '' $mod_line | string trim)
+                set_color cyan; echo "  -> $mod_ver ($kver)"; set_color normal
+                dkms install $mod_ver -k $kver
                 or set dkms_failed 1
             end
-            if test $dkms_failed -eq 1
-                set dkms_exit 1
-                set -a _errors "dkms autoinstall failed for one or more kernels"
-            end
-            depmod -a
-        else
-            set_color cyan; echo ""; echo "--> DKMS: no modules installed, skipping."; set_color normal
+            depmod -a $kver
+        end
+        if test $dkms_ran -eq 0
+            set_color cyan; echo ""; echo "--> DKMS: no modules or headers found, skipping."; set_color normal
+        end
+        if test $dkms_failed -eq 1
+            set dkms_exit 1
+            set -a _errors "dkms install failed for one or more modules"
         end
     end
  
@@ -548,9 +567,9 @@ function dcs-garuda-update --description "Portable pacman system updater"
                     echo "    • sudo pacman -Syuu                       — allow downgrades"
                 case "paru*" "yay*"
                     echo "    • paru -Sua  /  yay -Sua"
-                case "dkms autoinstall*"
-                    echo "    • sudo dkms autoinstall              — retry all modules"
+                case "dkms install*"
                     echo "    • dkms status                        — check module state"
+                    echo "    • sudo dkms install <mod>/<ver> -k <kver>  — retry specific module"
                     echo "    • sudo pacman -S linux-headers        — missing headers?"
                 case "locale-gen*"
                     echo "    • sudo locale-gen                    — retry"
