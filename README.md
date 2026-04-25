@@ -69,6 +69,8 @@
 
 **Screenshots:**
 ![terminals](examples/terminals.png)
+![starship](examples/starship.png)
+![starship2](examples/starship2.png)
 ![ff](examples/ff.png)
 ![ffc](examples/ffc.png)
 ![ffhg](examples/ffhg.png)
