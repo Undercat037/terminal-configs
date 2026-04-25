@@ -1,18 +1,19 @@
 # ~/.config/starship.toml
 
 format = """
-[╭──](cyan)\
-[\\(](cyan)\
+[╭──](blue)\
+[\\(](blue)\
 $username\
-[@](yellow)\
+[㉿](red)\
 $hostname\
-[\\)](cyan)\
-$directory\
+[\\)─](blue)\
 $time\
+[-](blue)\
+$directory\
 $cmd_duration\
 $all\
 $line_break\
-[╰─](cyan)\
+[╰─](blue)\
 $character\
 """
 
@@ -21,23 +22,23 @@ format = "[$user](bold red)"
 show_always = true
 
 [hostname]
-format = "[$hostname](bold green)"
+format = "[$hostname](bold red)"
 ssh_only = false
 disabled = false
 
 [directory]
-format = "[\\[](cyan)[$path](bold blue)[\\]](cyan)"
+format = "[\\[](blue)[$path](bold cyan)[\\]](blue)"
 truncation_length = 3
 truncate_to_repo = false
 
 [time]
-format = "[\\[](cyan)[$time](bold yellow)[\\]](cyan)"
-time_format = "%Y/%m/%d][%H:%M:%S"
+format = "[\\(](blue)[$time](bold yellow)[\\)](blue)"
+time_format = "%Y/%m/%d)(%H:%M:%S"
 disabled = false
 
 [cmd_duration]
 format = '[\[$duration\]]($style)'
-style = "bold cyan"
+style = "bold blue"
 min_time = 1000
 
 [character]
