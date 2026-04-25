@@ -109,7 +109,7 @@ alias bonsai='rbonsai -li'
 alias quarium='asciiquarium'
 alias rick='curl ascii.live/rick'
 alias map='telnet mapscii.me'
-
+alias tetris-sand='setrixtui'
 
 # =========================
 #  DeltaCat Scripts block
