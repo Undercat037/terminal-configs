@@ -34,6 +34,9 @@ abbr un7z '7z x'
 
 abbr pip-inst 'pip install --break-system-packages'
 
+# === for debian ===
+abbr at 'sudo apt install'
+
 
 # ==== git ==== 
 abbr gt-init 'git init'
