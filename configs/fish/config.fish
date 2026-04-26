@@ -91,6 +91,8 @@ alias mir-cach4='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pa
 
 alias please='sudo'
 
+alias rm-full='ls && read -P "Filename: " RMFILE && test -f $RMFILE && dd if=/dev/urandom of=$RMFILE bs=(stat -c%s $RMFILE) count=1 conv=notrunc status=progress && rm -rfi $RMFILE'
+
 alias ffh='fastfetch --logo ~/.config/fastfetch/hypr.png --logo-type kitty --logo-width 45 --logo-height 35'
 alias ffhg='fastfetch --logo ~/.config/fastfetch/hypr-gruvbox.png --logo-type kitty --logo-width 45 --logo-height 35'
 alias ffm='fastfetch --logo ~/.config/fastfetch/myst.png --logo-type kitty --logo-width 50 --logo-height 25'
