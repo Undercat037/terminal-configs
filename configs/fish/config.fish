@@ -73,6 +73,7 @@ alias dt="cd ~/Desktop"
 alias gt="cd ~/my-files/my-git-repos"
 
 alias reload="source ~/.config/fish/config.fish"
+
 alias ls='eza -al --color=always --group-directories-first --icons' # preferred listing
 alias lsz='eza -al --color=always --total-size --group-directories-first --icons' # include file size
 alias la='eza -a --color=always --group-directories-first --icons' # all files and dirs
@@ -95,11 +96,12 @@ alias please='sudo'
 
 alias rm-full='ls && read -P "Filename: " RMFILE && test -f $RMFILE && dd if=/dev/urandom of=$RMFILE bs=(stat -c%s $RMFILE) count=1 conv=notrunc status=progress && rm -rfi $RMFILE'
 
+alias ff='fastfetch'
+alias ffa='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/arch.txt'
 alias ffh='fastfetch --logo ~/.config/fastfetch/hypr.png --logo-type kitty --logo-width 45 --logo-height 35'
 alias ffhg='fastfetch --logo ~/.config/fastfetch/hypr-gruvbox.png --logo-type kitty --logo-width 45 --logo-height 35'
 alias ffm='fastfetch --logo ~/.config/fastfetch/myst.png --logo-type kitty --logo-width 50 --logo-height 25'
 alias ffnya='fastfetch --logo ~/.config/fastfetch/nyarch.png --logo-type kitty --logo-width 50 --logo-height 25'
-alias ff='fastfetch'
 
 alias ffc='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/cake.txt --logo-color-1 "$stell_alive"'
 alias ffn='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/nuke.txt --logo-color-1 "$stell_alive"'
