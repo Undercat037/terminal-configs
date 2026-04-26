@@ -13,7 +13,7 @@ set -g stell_alive "#ffb31c"
 set -x PATH $HOME/.cargo/bin $PATH
 set -x ANDROID_NDK_HOME /opt/android-ndk
 set -gx PATH $PATH $HOME/.lmstudio/bin
-# set -x TERM xterm
+# set -x TERM xterm-256color
 
 # ==========
 # Inits
@@ -95,7 +95,7 @@ alias ffh='fastfetch --logo ~/.config/fastfetch/hypr.png --logo-type kitty --log
 alias ffhg='fastfetch --logo ~/.config/fastfetch/hypr-gruvbox.png --logo-type kitty --logo-width 45 --logo-height 35'
 alias ffm='fastfetch --logo ~/.config/fastfetch/myst.png --logo-type kitty --logo-width 50 --logo-height 25'
 alias ffnya='fastfetch --logo ~/.config/fastfetch/nyarch.png --logo-type kitty --logo-width 50 --logo-height 25'
-alias ff='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/arch.txt'
+alias ff='fastfetch'
 
 alias ffc='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/cake.txt --logo-color-1 "$stell_alive"'
 alias ffn='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/nuke.txt --logo-color-1 "$stell_alive"'
