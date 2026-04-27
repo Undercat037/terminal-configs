@@ -48,9 +48,9 @@ abbr gt-commit 'git commit -m "Commit_Name"'
 abbr gt-push 'git push'
 abbr gt-pull 'git pull'
 abbr gt-log 'git log --oneline --graph'
-abbr gt-save-pass 'git config --global credential.helper libsecret'
 abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
 abbr gt-fastcommit 'git add .; git commit -m "fastCommit"; git push'
+#dcs-git-ssh-setup
 
 # === journalctl ===
 abbr jlog 'journalctl -b 0 | tee ~/last-session.log'
@@ -173,6 +173,19 @@ alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
 
 
 
+end
+
+function dcs-git-ssh-setup
+    ssh-keygen -t ed25519 -C (git config --global user.email)
+    echo ""
+    echo "Добавь этот ключ на github.com/settings/keys:"
+    echo ""
+    cat ~/.ssh/id_ed25519.pub
+    echo ""
+    read -P "Нажми Enter после добавления ключа на GitHub..." _
+    ssh -T git@github.com
+    git config --global url."git@github.com:".insteadOf "https://github.com/"
+    set_color green; echo "SSH настроен. Все новые клонированые репо будут через SSH."; set_color normal
 end
 
 

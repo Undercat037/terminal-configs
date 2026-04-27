@@ -10,6 +10,7 @@
 - `grep` / `egrep` / `fgrep` - через `ugrep` з кольором
 - `please` - `sudo`
 - `reload` - перезавантажити конфіг fish
+- `rm-full` - повне видалення(затирання данних через dd + rm -rf)
 
 **Архіви**
 - `tarnow` / `7znow` - запакувати архів 
@@ -23,16 +24,17 @@
 - `gt-push` - вивантажує комміт
 - `gt-pull` - завантажує оновлення репозиторію(треба бути в потрібному репозиторії)
 - `gt-log` - логи
-- `gt-save-pass` - зберігає данні для відвантаження(Username, Personal Access Token) у credential store
 - `gt-setup` - швидке розгортування репозиторію
 - `gt-fastcommit` - швидке вивантаження комміту
+- `dcs-git-ssh-setup` - налаштування SSH ключа
 
 **Mirrors:**
 - `mir-arch` / `mir-blac` / `mir-chao` - оновлення mirrorlist для Arch / BlackArch / Chaotic репозиторіїв
 - `mir-cach` / `mir-cach3` / `mir-cach4` - оновлення mirrorlist для CachyOS репозиторіїв
 
 **Fastfetch:**
-- `ff` - стандартний Arch логотип
+- `ff` - frastfetch
+- `ffa` - покращене лого arch
 - `ffh` / `ffhg` - Hyprchan(Hina) / Hina Gruvbox
 - `ffm` / `ffnya` - Myst / NyArch
 - `ffc` / `ffn` / `fffire` / `ffap` / `ffmesa` / `ffkaboom` / `ffbh` - ASCII з фіналу гри Portal
@@ -43,6 +45,7 @@
 - `quarium` - ASCII акваріум
 - `rick` - Rick Roll в терміналі
 - `map` - інтерактивна карта світу в терміналі
+- `tetris-sand` - пісочний тетріс
 
 **DeltaCat Scripts (`dcs-`):**
 > Зроблено для швидкого використання комманд через dcs- +Tab
@@ -65,7 +68,7 @@
 
 **DeltaCat Scripts Ports**
 - `dcs-dracut-rebuild` - перебудова initramfs(портований скрипт з garuda)
-- `dcs-garuda-update` - повне оновлення системи (порт garuda-update)(кейрінги, дзеркала, пакети, initramfs(dracut), grub) Флаги: --aur, --noconfirm, --skip-mirrorlist
+- `dcs-garuda-update` - повне оновлення системи (порт garuda-update)(кейрінги, дзеркала, пакети, dkms, initramfs(dracut), grub) Флаги: --aur, --skip-mirrorlist
 
 **Screenshots:**
 ![terminals](examples/terminals.png)
