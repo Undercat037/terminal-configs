@@ -54,5 +54,6 @@ cursor_trail 1
 
 # BEGIN_KITTY_THEME
 # Noctalia
+include ~/.config/kitty/themes/noctalia.conf
 include current-theme.conf
 # END_KITTY_THEME
