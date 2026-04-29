@@ -36,6 +36,9 @@ abbr un7z '7z x'
 
 abbr pip-inst 'pip install --break-system-packages'
 
+abbr gowall-edit 'gowall convert ~/Pictures/Wallpapers/WALL-NAME -t color-scheme'
+alias gowall-list 'gowall list'
+
 # === for debian ===
 abbr at 'sudo apt install'
 
