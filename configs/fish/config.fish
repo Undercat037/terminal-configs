@@ -2,6 +2,9 @@ function fish_greeting
 set_color normal
 end
 
+complete -e -c emerge
+complete -c emerge -w pacman
+
 if status is-interactive
 
 # ==========
