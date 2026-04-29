@@ -22,7 +22,7 @@ complete -c emerge -l aur -d "Explicitly use AUR"
 complete -c emerge -s D -l deep -d "Dummy flag (compatibility)"
 complete -c emerge -s N -l newuse -d "Dummy flag (compatibility)"
 complete -c emerge -s e -l emptytree -d "Dummy flag (compatibility)"
-complete -c emerge -s v -l verbose -d "Dummy flag (compatibility)"
+complete -c emerge -s v -l verbose -d "Verbose / Info output"
 complete -c emerge -s h -l help -d "Show help"
 complete -c emerge -s V -l version -d "Show version"
 
@@ -209,10 +209,6 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 
 # emerge - Своя реалізація, обгортка над AUR Helper aura
 
-
-# GitHub Repository Setup Tool
-# Logic: Only commits a dummy .init file if directory is not empty.
-# Does NOT auto-add your existing project files.
 
 function gt-setup
     argparse 'u/user=' 'n/name=' 'h/help' -- $argv
