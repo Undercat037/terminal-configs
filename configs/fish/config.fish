@@ -2,10 +2,40 @@ function fish_greeting
 set_color normal
 end
 
-complete -e -c emerge
-complete -c emerge -w pacman
+
 
 if status is-interactive
+
+# ==========================================
+# Emerge (aura-emerge) Autocompletion
+# ==========================================
+complete -e -c emerge
+
+complete -c emerge -s s -l search -d "Search for packages"
+complete -c emerge -l sync -d "Sync package database"
+complete -c emerge -s u -l update -d "Update packages"
+complete -c emerge -s c -l depclean -d "Remove orphans"
+complete -c emerge -s p -l pretend -d "Pretend (dry run)"
+complete -c emerge -s a -l ask -d "Ask before applying changes"
+complete -c emerge -s 1 -l oneshot -d "Do not add to world.set"
+complete -c emerge -l aur -d "Explicitly use AUR"
+complete -c emerge -s D -l deep -d "Dummy flag (compatibility)"
+complete -c emerge -s N -l newuse -d "Dummy flag (compatibility)"
+complete -c emerge -s e -l emptytree -d "Dummy flag (compatibility)"
+complete -c emerge -s v -l verbose -d "Dummy flag (compatibility)"
+complete -c emerge -s h -l help -d "Show help"
+complete -c emerge -s V -l version -d "Show version"
+
+complete -c emerge -f -a "(
+    set -l tok (commandline -ct)
+    if test -n \"\$tok\"; and not string match -q -- '-*' \"\$tok\"
+        if string match -q -- '@*' \"\$tok\"
+            echo '@world'
+        else
+            pacman -Ssq | string match -i \"\$tok*\"
+        end
+    end
+)"
 
 # ==========
 # Sets
@@ -54,7 +84,7 @@ abbr gt-commit 'git commit -m "Commit_Name"'
 abbr gt-push 'git push'
 abbr gt-pull 'git pull'
 abbr gt-log 'git log --oneline --graph'
-abbr gt-setup 'git remote add origin https://github.com/Username/ && git branch -M main && git push -u origin main'
+#abbr gt-setup 
 abbr gt-fastcommit 'git add .; git commit -m "fastCommit"; git push'
 #dcs-git-ssh-setup
 
@@ -171,15 +201,76 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
 #  DeltaCat Scripts Ports
 # =========================
 # Реалізація через функції, знаходяться далі(притримуюсь принципу монолітного конфігу)
-#dcs-dracut-rebuild - v2 працює ідеально
+# dcs-dracut-rebuild - v2 працює ідеально
 
-#dcs-garuda-update - v1.6
-alias dcs-garuda-update-aur='dcs-garuda-update --aur'
-alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
+# dcs-garuda-update - v1.6
+ alias dcs-garuda-update-aur='dcs-garuda-update --aur'
+ alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
+
+# emerge - Своя реалізація, обгортка над AUR Helper aura
 
 
+# GitHub Repository Setup Tool
+# Logic: Only commits a dummy .init file if directory is not empty.
+# Does NOT auto-add your existing project files.
+
+function gt-setup
+    argparse 'u/user=' 'n/name=' 'h/help' -- $argv
+    or return 1
+
+    if set -q _flag_help
+        echo "Usage: gt-setup -u <Username> [-n <RepoName>]"
+        return 0
+    end
+
+    set -l github_user
+    set -l repo_name
+
+    if set -q _flag_user
+        set github_user $_flag_user
+    else
+        echo ">>> Error: GitHub username required (-u)"
+        return 1
+    end
+
+    if set -q _flag_name
+        set repo_name $_flag_name
+    else
+        set repo_name (basename (pwd))
+    end
+
+    # 1. Git Init
+    if not test -d .git
+        git init
+        echo ">>> Initialized Git repository."
+    end
+
+    # 2. Safety First: Only add a specific dummy file
+    # This creates a commit history without touching your existing files
+    date > .init
+    echo "Repository initialized by gt-setup" >> .init
+    
+    git add .init
+    git commit -m "Initial commit (system initialization)"
+    git branch -M main
+
+    # 3. Setup Remote
+    git remote remove origin 2>/dev/null
+    git remote add origin "https://github.com/$github_user/$repo_name.git"
+
+    # 4. Push only the .init file
+    echo ">>> Syncing initialization with GitHub..."
+    if git push -u origin main
+        echo ">>> Success! Git is ready."
+        echo ">>> YOUR FILES ARE NOT ADDED YET. Use 'git add <files>' to start backing up your code."
+    else
+        echo ">>> Error: Push failed. Make sure the repo exists on GitHub!"
+    end
+end
 
 end
+
+
 
 function dcs-git-ssh-setup
     ssh-keygen -t ed25519 -C (git config --global user.email)
