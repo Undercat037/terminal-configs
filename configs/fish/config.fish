@@ -76,7 +76,8 @@ alias gowall-list 'gowall list'
 abbr at 'sudo apt install'
 
 
-# ==== git ==== 
+# ==== git ====
+#gt 
 abbr gt-init 'git init'
 abbr gt-status 'git status'
 abbr gt-add-all 'git add .'
@@ -87,6 +88,14 @@ abbr gt-log 'git log --oneline --graph'
 #abbr gt-setup 
 abbr gt-fastcommit 'git add .; git commit -m "fastCommit"; git push'
 #dcs-git-ssh-setup
+
+# AUR / makepkg
+#aur
+abbr aur-clone 'git clone ssh://aur@aur.archlinux.org/'
+abbr aur-push 'makepkg --printsrcinfo > .SRCINFO; git add PKGBUILD .SRCINFO; git commit -m "update"; git push'
+abbr aur-build 'makepkg -si'
+abbr aur-check 'namcap PKGBUILD'
+abbr aur-srcinfo 'makepkg --printsrcinfo > .SRCINFO'
 
 # === journalctl ===
 abbr jlog 'journalctl -b 0 | tee ~/last-session.log'
@@ -107,6 +116,7 @@ alias dl="cd ~/Downloads"
 alias doc="cd ~/Documents"
 alias dt="cd ~/Desktop"
 alias gt="cd ~/my-files/my-git-repos"
+alias aur="cd ~/my-files/my-aur-repos"
 
 alias reload="source ~/.config/fish/config.fish"
 
