@@ -25,6 +25,8 @@ complete -c emerge -s e -l emptytree -d "Dummy flag (compatibility)"
 complete -c emerge -s v -l verbose -d "Verbose / Info output"
 complete -c emerge -s h -l help -d "Show help"
 complete -c emerge -s V -l version -d "Show version"
+complete -c emerge -s C -l unmerge -d "Remove specific packages"
+complete -c emerge -s O -l noreplace -d "Do not reinstall if already installed"
 
 complete -c emerge -f -a "(
     set -l tok (commandline -ct)
@@ -159,7 +161,7 @@ alias ffmesa='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/bl
 alias ffkaboom='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/kaboom.txt --logo-color-1 "$stell_alive"'
 alias ffbh='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/broken-heart.txt --logo-color-1 "$stell_alive"'
 
-alias neo='neo-matrix --speed=13'
+alias neo='neo-matrix -D -S 13 -f 240 -F -M 1 --colormode=256'
 alias bonsai='rbonsai -li'
 alias quarium='asciiquarium'
 alias rick='curl ascii.live/rick'
@@ -217,7 +219,7 @@ alias dcs-rust-aarch-build='cargo ndk -t aarch64-linux-android build'
  alias dcs-garuda-update-aur='dcs-garuda-update --aur'
  alias dcs-garuda-update-skip-mirror='dcs-garuda-update --skip-mirrorlist'
 
-# emerge - Своя реалізація, обгортка над AUR Helper aura
+# emerge - Своя реалізація, обгортка над AUR Helper aura(https://github.com/Undercat037/aura-emerge)
 
 
 function gt-setup
