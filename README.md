@@ -7,7 +7,7 @@
 **Утиліти:**
 - `ls` / `la` / `ll` / `lt` / `ld` / `lsz` - варіанти `eza` з іконками
 - `cat` - `bat` з заголовком і підсвіткою змін
-- `grep` / `egrep` / `fgrep` - через `ugrep` з кольором
+- `grep` / `egrep` / `fgrep` - через `ripgrep`
 - `please` - `sudo`
 - `reload` - перезавантажити конфіг fish
 - `rm-full` - повне видалення(затирання данних через dd + rm -rf)
@@ -43,8 +43,8 @@
 - `neo` - Matrix ефект
 - `bonsai` - живе дерево бонсай
 - `quarium` - ASCII акваріум
-- `rick` - Rick Roll в терміналі
-- `map` - інтерактивна карта світу в терміналі
+- `rick` - Rick Roll анімація
+- `map` - інтерактивна карта світу ASCII
 - `tetris-sand` - пісочний тетріс
 
 **DeltaCat Scripts (`dcs-`):**
