@@ -161,6 +161,7 @@ if status is-interactive
     alias ffbh='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/broken-heart.txt --logo-color-1 "$stell_alive"'
 
     alias netorbit='sudo ~/.local/bin/netorbit --violet'
+
     alias neo='neo-matrix -D -S 13 -f 240 -F -M 1 --colormode=256'
     alias bonsai='rbonsai -li'
     alias quarium='asciiquarium'

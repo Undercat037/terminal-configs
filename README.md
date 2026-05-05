@@ -11,10 +11,25 @@
 - `please` - `sudo`
 - `reload` - перезавантажити конфіг fish
 - `rm-full` - повне видалення(затирання данних через dd + rm -rf)
+- `at` - `sudo apt install`(по іншому не пояснити)
+- `pip-inst` - інсталяція ліби через pip
 
 **Архіви**
 - `tarnow` / `7znow` - запакувати архів 
 - `untar` / `un7z` - розпакувати архів
+
+**journalctl** (незабаром буде)
+- `jlog`
+- `jlog-` 
+- `jlog-`
+- `jlog-`
+
+**AUR арбревіації**
+- `aur-clone ` - заготовка комманди для клонування AUR репозиторію
+- `aur-push` - швидке вивантаження оновлення
+- `aur-build` - збірка
+- `aur-check` - перевірка правильності PKGBUILD через namcap 
+- `aur-srcinfo` - збірка .SRCINFO
 
 **Git арбревіації**
 - `gt-init` - ініціалізація репозиторію
@@ -38,6 +53,12 @@
 - `ffh` / `ffhg` - Hyprchan(Hina) / Hina Gruvbox
 - `ffm` / `ffnya` - Myst / NyArch
 - `ffc` / `ffn` / `fffire` / `ffap` / `ffmesa` / `ffkaboom` / `ffbh` - ASCII з фіналу гри Portal
+
+**Просто цікаві тулзи**
+- `code-photo` - заготовка для створення фото коду через freeze 
+- `netorbit` - відслідковування трафіку на мапі світу
+- `gowall-list` - доступні палітри кольорів 
+- `gowall-edit` - переробка шпалер під іншу кольорову палітру 
 
 **Розваги:**
 - `neo` - Matrix ефект
@@ -67,6 +88,7 @@
 - `dcs-rustbookua` - запуск rustbook
 
 **DeltaCat Scripts Ports**
+- [emerge](https://github.com/Undercat037/aura-emerge)
 - `dcs-dracut-rebuild` - перебудова initramfs(портований скрипт з garuda)
 - `dcs-garuda-update` - повне оновлення системи (порт garuda-update)(кейрінги, дзеркала, пакети, dkms, initramfs(dracut), grub) Флаги: --aur, --skip-mirrorlist
 
