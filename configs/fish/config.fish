@@ -48,6 +48,7 @@ if status is-interactive
     set -gx PATH $PATH $HOME/.lmstudio/bin
     set -x XDG_DATA_DIRS /home/deltacat/my-files/Launcher/install/share:/usr/local/share:/usr/share
     set -x PATH /home/deltacat/my-files/Launcher/install/bin $PATH
+    set -x PATH /home/deltacat/.local/bin $PATH
     # set -x TERM xterm-256color
 
     # ==========
@@ -70,8 +71,9 @@ if status is-interactive
     abbr pip-inst 'pip install --break-system-packages'
 
     abbr gowall-edit 'gowall convert ~/Pictures/Wallpapers/WALL-NAME -t color-scheme'
-    alias gowall-list 'gowall list'
+    abbr gowall-list 'gowall list'
 
+    abbr code-photo 'freeze src/main.rs ~/myfiles/main-rs.png'
     # === for debian ===
     abbr at 'sudo apt install'
 
@@ -158,6 +160,7 @@ if status is-interactive
     alias ffkaboom='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/kaboom.txt --logo-color-1 "$stell_alive"'
     alias ffbh='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/broken-heart.txt --logo-color-1 "$stell_alive"'
 
+    alias netorbit='sudo ~/.local/bin/netorbit --violet'
     alias neo='neo-matrix -D -S 13 -f 240 -F -M 1 --colormode=256'
     alias bonsai='rbonsai -li'
     alias quarium='asciiquarium'
