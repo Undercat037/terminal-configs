@@ -113,8 +113,6 @@ if status is-interactive
     alias .....="cd ../../../.."
     alias ......="cd ../../../../.."
 
-    alias cd='z'
-
     alias dl="cd ~/Downloads"
     alias doc="cd ~/Documents"
     alias dt="cd ~/Desktop"
