@@ -74,8 +74,30 @@ if status is-interactive
     abbr gowall-list 'gowall list'
 
     abbr code-photo 'freeze src/main.rs ~/myfiles/main-rs.png'
+
+    # ========= FFMPEG ===========
+    # Базовая спектрограмма (Stereo, Separate)
+    abbr dcs-ffmpeg-spectrogram 'ffmpeg -i decode/audio.wav -lavfi "showspectrumpic=s=4096x2048:mode=separate" decode/spectrogram.png'
+    # Спектрограмма в цвете (Fiery)
+    abbr dcs-ffmpeg-spectrogram-alt 'ffmpeg -i decode/audio.wav -lavfi "showspectrumpic=s=4096x2048:mode=separate:color=fiery" decode/spectrogram_alt.png'
+    # Извлечение аудио из видео (Тайминг из Wicsur-PRINCE)
+    abbr dcs-ffmpeg-mp4-to-wav 'ffmpeg -ss 00:02:06.133 -t 2 -i Video.mp4 -ac 2 -ar 44100 decode/audio.wav'
+    # Замедление (atempo 0.5)
+    abbr dcs-ffmpeg-slow 'ffmpeg -i decode/audio.wav -filter:a "atempo=0.5" -vn decode/audio_slow.wav'
+    # Разность фаз (Вычитание каналов L-R)
+    abbr dcs-ffmpeg-phase-diff 'ffmpeg -i decode/audio.wav -filter_complex "pan=mono|c0=c0-c1" decode/phase_diff.wav'
+    # Разделение на два моно-файла
+    abbr dcs-ffmpeg-split 'ffmpeg -i decode/audio.wav -map_channel 0.0.0 decode/left.wav -map_channel 0.0.1 decode/right.wav'
+    # Наложение спектрограммы на видео (в реальном времени)
+    abbr dcs-ffmpeg-v-spec 'ffmpeg -i Video.mp4 -filter_complex "[0:a]showspectrum=s=1280x720:mode=separate[v]" -map "[v]" -map 0:a decode/video_spec.mp4'
+    # "Проявление" скрытых деталей (усиление контраста спектрограммы)
+    abbr dcs-ffmpeg-enhance 'ffmpeg -i decode/audio.wav -lavfi "showspectrumpic=s=4096x2048:legend=0,histeq" decode/enhanced_spectrogram.png'
+    abbr dcs-ffmpeg-frames 'ffmpeg -ss 00:02:06.133 -i Video.mp4 -fps_mode passthrough decode/frames-av1/frame_%04d.png'
+
     # === for debian ===
     abbr at 'sudo apt install'
+
+    abbr own 'sudo chown -R $USER:$USER ~/file'
 
     # ==== git ====
     #gt 
@@ -120,6 +142,9 @@ if status is-interactive
     alias aur="cd ~/my-files/my-aur-repos"
 
     alias reload="source ~/.config/fish/config.fish"
+
+    #searx_up
+    #searx_down
 
     alias ls='eza -al --color=always --group-directories-first --icons' # preferred listing
     alias lsz='eza -al --color=always --total-size --group-directories-first --icons' # include file size
@@ -186,6 +211,7 @@ if status is-interactive
     alias dcs-nvmodprobe-conf='cat /etc/modprobe.d/nvidia.conf'
 
     alias dcs-fish-edit='nano ~/.config/fish/config.fish'
+    alias dcs-fish-editv='nvim ~/.config/fish/config.fish'
 
     alias dcs-pacman-edit='sudo nano /etc/pacman.conf'
     alias dcs-pacman-clear='sudo rm -rf /var/cache/pacman/pkg/*'
@@ -276,6 +302,14 @@ if status is-interactive
         end
     end
 
+end
+
+function searx_up
+    docker compose -f ~/searxng/docker-compose.yaml up -d
+end
+
+function searx_down
+    docker compose -f ~/searxng/docker-compose.yaml down
 end
 
 function dcs-git-ssh-setup
