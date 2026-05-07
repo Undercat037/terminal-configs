@@ -304,12 +304,29 @@ if status is-interactive
 
 end
 
+function take
+    sudo setfacl -R -m u:$USER:rwx $argv
+    sudo setfacl -R -d -m u:$USER:rwx $argv
+end
+
+function searx_reload
+    docker compose -f ~/searxng/docker-compose.yml down
+    pkill ngrok
+    docker compose -f ~/searxng/docker-compose.yml up -d
+    sleep 2
+    nohup ngrok http --domain=jerold-pinnate-semineurotically.ngrok-free.dev 8080 >/dev/null 2>&1 &
+end
+
 function searx_up
-    docker compose -f ~/searxng/docker-compose.yaml up -d
+    docker compose -f ~/searxng/docker-compose.yml up -d
+    pkill ngrok
+    sleep 2
+    nohup ngrok http --domain=jerold-pinnate-semineurotically.ngrok-free.dev 8080 >/dev/null 2>&1 &
 end
 
 function searx_down
-    docker compose -f ~/searxng/docker-compose.yaml down
+    docker compose -f ~/searxng/docker-compose.yml down
+    pkill ngrok
 end
 
 function dcs-git-ssh-setup
