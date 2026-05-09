@@ -45,6 +45,7 @@ if status is-interactive
     set -g stell_alive "#ffb31c"
     set -x PATH $HOME/.cargo/bin $PATH
     set -x ANDROID_NDK_HOME /opt/android-ndk
+    set -x PATH $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin $PATH
     set -gx PATH $PATH $HOME/.lmstudio/bin
     set -x XDG_DATA_DIRS /home/deltacat/my-files/Launcher/install/share:/usr/local/share:/usr/share
     set -x PATH /home/deltacat/my-files/Launcher/install/bin $PATH
@@ -312,6 +313,7 @@ end
 function searx_reload
     docker compose -f ~/searxng/docker-compose.yml down
     pkill ngrok
+    sleep 1
     docker compose -f ~/searxng/docker-compose.yml up -d
     sleep 2
     nohup ngrok http --domain=jerold-pinnate-semineurotically.ngrok-free.dev 8080 >/dev/null 2>&1 &
