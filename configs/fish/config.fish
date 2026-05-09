@@ -100,6 +100,17 @@ if status is-interactive
 
     abbr own 'sudo chown -R $USER:$USER ~/file'
 
+    # === Gentoo ===
+    abbr gto-overlay-repos 'nano /etc/portage/repos.conf/eselect-repo.conf '
+    abbr gto-overlay-list 'eselect repository list'
+    abbr gto-overlay-enbl 'eselect repository enable ovlname'
+    abbr gto-overlay-update 'emaint sync -A'
+    abbr gto-unmask 'nano /etc/portage/package.accept_keywords/misc'
+    abbr gto-unmask-line 'echo "category/package ~amd64" >> /etc/portage/package.accept_keywords/misc'
+    abbr gto-use 'nano /etc/portage/package.use/'
+    abbr gto-world 'emerge --ask --newuse --deep @world'
+    abbr gto-clean 'emerge --ask --depclean'
+
     # ==== git ====
     #gt 
     abbr gt-init 'git init'
