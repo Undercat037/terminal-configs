@@ -101,15 +101,18 @@ if status is-interactive
     abbr own 'sudo chown -R $USER:$USER ~/file'
 
     # === Gentoo ===
-    abbr gto-overlay-repos 'nano /etc/portage/repos.conf/eselect-repo.conf '
-    abbr gto-overlay-list 'eselect repository list'
-    abbr gto-overlay-enbl 'eselect repository enable ovlname'
-    abbr gto-overlay-update 'emaint sync -A'
-    abbr gto-unmask 'nano /etc/portage/package.accept_keywords/misc'
-    abbr gto-unmask-line 'echo "category/package ~amd64" >> /etc/portage/package.accept_keywords/misc'
-    abbr gto-use 'nano /etc/portage/package.use/'
-    abbr gto-world 'emerge --ask --newuse --deep @world'
-    abbr gto-clean 'emerge --ask --depclean'
+    abbr gto-overlay-repos 'sudo nano /etc/portage/repos.conf/eselect-repo.conf '
+    abbr gto-overlay-list 'sudo eselect repository list'
+    abbr gto-overlay-enbl 'sudo eselect repository enable name'
+    abbr gto-overlay-update 'sudo emaint sync -A'
+    abbr gto-unmask 'sudo nano /etc/portage/package.accept_keywords/misc'
+    abbr gto-unmask-line 'echo "category/package ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/misc'
+    abbr gto-pkg-use 'sudo nano /etc/portage/package.use/misc'
+    abbr gto-pkg-use-line "echo 'category/package flag' | sudo tee -a /etc/portage/package.use/misc"
+    abbr gto-world 'sudo emerge --ask --newuse --deep @world'
+    abbr gto-clean 'sudo emerge --ask --depclean'
+    abbr gto-USE 'sudo nano /etc/portage/make.conf'
+    abbr gto-aply-sett 'sudo dispatch-conf'
 
     # ==== git ====
     #gt 

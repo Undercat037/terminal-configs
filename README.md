@@ -69,6 +69,19 @@
 - `map` - інтерактивна карта світу ASCII
 - `tetris-sand` - пісочний тетріс
 
+**Gentoo (`gto-`):**
+- `gto-overlay-repos` - редагування repos.conf
+- `gto-overlay-list` - список оверлеїв
+- `gto-overlay-enbl` - увімкнути оверлей
+- `gto-overlay-update` - синхронізація всіх оверлеїв
+- `gto-unmask` - редагування package.accept_keywords
+- `gto-unmask-line` - додати рядок в package.accept_keywords
+- `gto-pkg-use` - редагування package.use
+- `gto-USE` - редагування make.conf
+- `gto-world` - оновлення системи з новими USE флагами
+- `gto-clean` - видалення непотрібних залежностей
+- `gto-aply-sett` - застосування змін конфігів
+
 **DeltaCat Scripts (`dcs-`):**
 > Зроблено для швидкого використання комманд через dcs- +Tab
 - `dcs-health-analyze` - стан батареї та SSD
@@ -88,7 +101,7 @@
 - `dcs-rustbookua-setup` - встановлення rustbook з українським перекладом
 - `dcs-rustbookua` - запуск rustbook
 
-**DeltaCat Scripts Ports**
+**DeltaCat Scripts Ports**:
 - [emerge](https://github.com/Undercat037/aura-emerge)
 - `dcs-dracut-rebuild` - перебудова initramfs(портований скрипт з garuda)
 - `dcs-garuda-update` - повне оновлення системи (порт garuda-update)(кейрінги, дзеркала, пакети, dkms, initramfs(dracut), grub) Флаги: --aur, --skip-mirrorlist
