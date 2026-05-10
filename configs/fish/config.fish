@@ -13,19 +13,24 @@ if status is-interactive
     complete -c emerge -l sync -d "Sync package database"
     complete -c emerge -s u -l update -d "Update packages"
     complete -c emerge -s c -l depclean -d "Remove orphans"
+    complete -c emerge -s C -l unmerge -d "Remove specific packages"
     complete -c emerge -s p -l pretend -d "Pretend (dry run)"
     complete -c emerge -s a -l ask -d "Ask before applying changes"
-    complete -c emerge -s 1 -l oneshot -d "Do not add to world.set"
-    complete -c emerge -l aur -d "Explicitly use AUR"
-    complete -c emerge -s D -l deep -d "Dummy flag (compatibility)"
-    complete -c emerge -s N -l newuse -d "Dummy flag (compatibility)"
-    complete -c emerge -s e -l emptytree -d "Dummy flag (compatibility)"
-    complete -c emerge -s v -l verbose -d "Verbose / Info output"
+    complete -c emerge -s 1 -l oneshot -d "Install as dependency (no world.set)"
+    complete -c emerge -l aur -d "Explicitly force AUR only"
+    complete -c emerge -s v -l verbose -d "Verbose output / detailed info in search mode"
+    complete -c emerge -s n -l noreplace -d "Do not reinstall if already installed"
+
+    # Dummy flags for compatibility
+    complete -c emerge -s D -l deep -d "Consider the whole dependency tree"
+    complete -c emerge -s N -l newuse -d "Include installed pkgs with changed USE flags"
+    complete -c emerge -s e -l emptytree -d "Reinstall all world pkgs"
+
+    # Стандартные флаги
     complete -c emerge -s h -l help -d "Show help"
     complete -c emerge -s V -l version -d "Show version"
-    complete -c emerge -s C -l unmerge -d "Remove specific packages"
-    complete -c emerge -s O -l noreplace -d "Do not reinstall if already installed"
 
+    # Автодополнение для названий пакетов
     complete -c emerge -f -a "(
         set -l tok (commandline -ct)
         if test -n \"\$tok\"; and not string match -q -- '-*' \"\$tok\"
