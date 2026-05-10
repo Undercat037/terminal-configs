@@ -118,7 +118,7 @@ if status is-interactive
     abbr gto-clean 'sudo emerge --ask --depclean'
     abbr gto-USE 'sudo nano /etc/portage/make.conf'
     abbr gto-aply-sett 'sudo dispatch-conf'
-    abbr gto-world-list'cat /var/lib/portage/world'
+    abbr gto-world-list 'cat /var/lib/portage/world'
 
     # ==== git ====
     #gt 
