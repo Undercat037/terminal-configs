@@ -74,13 +74,17 @@
 - `gto-overlay-list` - список оверлеїв
 - `gto-overlay-enbl` - увімкнути оверлей
 - `gto-overlay-update` - синхронізація всіх оверлеїв
-- `gto-unmask` - редагування package.accept_keywords
-- `gto-unmask-line` - додати рядок в package.accept_keywords
-- `gto-pkg-use` - редагування package.use
+- `gto-unmask-edit` - редагування package.accept_keywords
+- `gto-unmask` - додати рядок в package.accept_keywords
+- `gto-pkg-use-edit` - редагування package.use
+- `gto-pkg-use` - для швидкого додовання флагів в package.use/ 
+- `gto-world-list` - вивід файлу world
 - `gto-USE` - редагування make.conf
 - `gto-world` - оновлення системи з новими USE флагами
 - `gto-clean` - видалення непотрібних залежностей
 - `gto-aply-sett` - застосування змін конфігів
+
+
 
 **DeltaCat Scripts (`dcs-`):**
 > Зроблено для швидкого використання комманд через dcs- +Tab

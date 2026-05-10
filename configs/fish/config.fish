@@ -66,7 +66,7 @@ if status is-interactive
     # ==========
     # Abbrs
     # ==========
-    abbr cat 'bat --style header,snip,changes'
+    abbr cat 'bat --style changes'
     abbr wget 'wget -c '
 
     abbr tarnow 'tar -acf '
@@ -110,14 +110,15 @@ if status is-interactive
     abbr gto-overlay-list 'sudo eselect repository list'
     abbr gto-overlay-enbl 'sudo eselect repository enable name'
     abbr gto-overlay-update 'sudo emaint sync -A'
-    abbr gto-unmask 'sudo nano /etc/portage/package.accept_keywords/misc'
-    abbr gto-unmask-line 'echo "category/package ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/misc'
-    abbr gto-pkg-use 'sudo nano /etc/portage/package.use/misc'
-    abbr gto-pkg-use-line "echo 'category/package flag' | sudo tee -a /etc/portage/package.use/misc"
+    abbr gto-unmask-edit 'sudo nano /etc/portage/package.accept_keywords/misc'
+    abbr gto-unmask 'echo "category/package ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/misc'
+    abbr gto-pkg-use-edit 'sudo nano /etc/portage/package.use/misc'
+    abbr gto-pkg-use "echo 'category/package flag' | sudo tee -a /etc/portage/package.use/misc"
     abbr gto-world 'sudo emerge --ask --newuse --deep @world'
     abbr gto-clean 'sudo emerge --ask --depclean'
     abbr gto-USE 'sudo nano /etc/portage/make.conf'
     abbr gto-aply-sett 'sudo dispatch-conf'
+    abbr gto-world-list'cat /var/lib/portage/world'
 
     # ==== git ====
     #gt 
