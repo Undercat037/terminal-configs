@@ -218,7 +218,7 @@ if status is-interactive
     # =========================
     #  DeltaCat Scripts block
     # =========================
-    alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | grep -E "Percentage Used|Available Spare|Data Units Written"'
+    alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | rg "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | rg "Percentage Used|Available Spare|Data Units Written"'
     alias dcs-btrfs-balance='sudo btrfs balance start -dusage=90 / '
 
     alias dcs-grub-edit='sudo nano /etc/default/grub'
@@ -248,8 +248,8 @@ if status is-interactive
     alias dcs-hashcat-passcheck='sudo cat /root/.local/share/hashcat/hashcat.potfile'
     alias dcs-hashcat-watching='sudo watch -n 5 bat --style header,snip,changes /root/.local/share/hashcat/hashcat.potfile'
 
-    alias dcs-mon-start='sudo airmon-ng start wlp3s0'
-    alias dcs-mon-stop='sudo airmon-ng stop wlp3s0mon'
+    abbr dcs-mon-start 'sudo airmon-ng start wlan0'
+    abbr dcs-mon-stop 'sudo airmon-ng stop wlan0mon'
 
     alias dcs-rust-setup='sudo pacman -S rustup rust-src cargo-ndk android-ndk && rustup default stable && rustup target add aarch64-linux-android'
     alias dcs-rustbookua-setup='cargo install mdbook; git clone https://github.com/rust-lang-ua/rustbook_ukrainian ~/my-files/rustbook_ukrainian && cd ~/my-files/rustbook_ukrainian && mdbook build'
