@@ -74,6 +74,8 @@ if status is-interactive
     abbr 7znow '7z a'
     abbr un7z '7z x'
 
+    abbr rcp 'rsync -avz  --progress'
+
     abbr pip-inst 'pip install --break-system-packages'
 
     abbr gowall-edit 'gowall convert ~/Pictures/Wallpapers/WALL-NAME -t color-scheme'
@@ -195,6 +197,7 @@ if status is-interactive
     alias ffhg='fastfetch --logo ~/.config/fastfetch/hypr-gruvbox.png --logo-type kitty --logo-width 45 --logo-height 35'
     alias ffm='fastfetch --logo ~/.config/fastfetch/myst.png --logo-type kitty --logo-width 50 --logo-height 25'
     alias ffnya='fastfetch --logo ~/.config/fastfetch/nyarch.png --logo-type kitty --logo-width 50 --logo-height 25'
+    alias ffhornet='fastfetch --logo ~/.config/fastfetch/hornet-ff.png --logo-type kitty --logo-width 49 --logo-height 21'
 
     alias ffc='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/cake.txt --logo-color-1 "$stell_alive"'
     alias ffn='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/nuke.txt --logo-color-1 "$stell_alive"'
