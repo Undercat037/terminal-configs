@@ -1,0 +1,39 @@
+# Font
+font-family = JetBrainsMono Nerd Font
+font-size = 9
+
+# Window
+window-save-state = always
+window-width = 640
+window-height = 400
+window-padding-x = 10
+window-padding-y = 10
+window-decoration = true
+background-opacity = 0.8
+background-blur-radius = 64
+
+# Shell
+command = fish
+gtk-titlebar = true
+
+# Performance
+# repaint-delay = 10
+
+# Bell
+#bell = false
+
+# Mouse
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+
+# Scrollback
+scrollback-limit = 10000
+
+# Cursor
+cursor-style = bar
+cursor-style-blink = false
+
+# URL
+link-url = true
+
+theme = noctalia
