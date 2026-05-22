@@ -2,23 +2,23 @@
 background = 131313
 foreground = e2e2e2
 
-selection-background = edbe92
-selection-foreground = 472a0a
+selection-background = e2e2e2
+selection-foreground = 1b1b1b
 
 regular0 = 474747
 regular1 = ffb4ab
-regular2 = ffb1c3
-regular3 = e4bdc4
-regular4 = edbe92
-regular5 = ffb1c3
-regular6 = e4bdc4
+regular2 = ffffff
+regular3 = c6c6c6
+regular4 = e2e2e2
+regular5 = c6c6c6
+regular6 = c6c6c6
 regular7 = e2e2e2
 
 bright0  = c6c6c6
 bright1  = ffb4ab
-bright2  = ffb1c3
-bright3  = e4bdc4
-bright4  = edbe92
-bright5  = ffb1c3
-bright6  = e4bdc4
+bright2  = ffffff
+bright3  = c6c6c6
+bright4  = e2e2e2
+bright5  = c6c6c6
+bright6  = c6c6c6
 bright7  = e2e2e2

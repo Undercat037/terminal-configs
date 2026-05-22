@@ -57,6 +57,7 @@ if status is-interactive
     set -x PATH /home/deltacat/.local/bin $PATH
     set -gx CARGO_NET_GIT_FETCH_WITH_CLI true
     # set -x TERM xterm-256color
+    set -x PATH /usr/lib/ccache/bin $PATH
 
     # ==========
     # Inits
@@ -67,7 +68,7 @@ if status is-interactive
     # ==========
     # Abbrs
     # ==========
-    abbr cat 'bat --style changes'
+    abbr catb 'bat --style changes'
     abbr wget 'wget -c '
 
     abbr tarnow 'tar -acf '
@@ -172,10 +173,10 @@ if status is-interactive
 
     alias ls='eza -al --color=always --group-directories-first --icons' # preferred listing
     alias lsz='eza -al --color=always --total-size --group-directories-first --icons' # include file size
-    alias la='eza -a --color=always --group-directories-first --icons' # all files and dirs
-    alias ll='eza -l --color=always --group-directories-first --icons' # long format
-    alias lt='eza -aT --color=always --group-directories-first --icons' # tree listing
-    alias ld='eza -ald --color=always --group-directories-first --icons .*' # show only dotfiles
+    alias lsa='eza -a --color=always --group-directories-first --icons' # all files and dirs
+    alias lsl='eza -l --color=always --group-directories-first --icons' # long format
+    alias lst='eza -aT --color=always --group-directories-first --icons' # tree listing
+    alias lsd='eza -ald --color=always --group-directories-first --icons .*' # show only dotfiles
 
     alias grep='rg'
     alias egrep='rg'
@@ -222,6 +223,8 @@ if status is-interactive
     # =========================
     #  DeltaCat Scripts block
     # =========================
+    alias dcs-makepkg-edit='nvim ~/.config/pacman/makepkg.conf'
+
     alias dcs-health-analyze='sudo echo "=== БАТАРЕЯ ===" && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | rg "capacity|energy-full" && echo "=== SSD ===" && sudo smartctl -a /dev/nvme0n1 | rg "Percentage Used|Available Spare|Data Units Written"'
     alias dcs-btrfs-balance='sudo btrfs balance start -dusage=90 / '
 
@@ -333,27 +336,59 @@ function take
     sudo setfacl -R -m u:$USER:rwx $argv
     sudo setfacl -R -d -m u:$USER:rwx $argv
 end
+# ==========================================
+# Localtunnel (deltax-*) Functions
+# ==========================================
+
+function penpot_reload
+    docker compose -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml down
+    pkill -f "lt --port 9000" 2>/dev/null
+    sleep 1
+    docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml up -d
+    sleep 2
+    nohup lt --port 9000 --subdomain deltax-penpot >/dev/null 2>&1 &
+end
+
+function penpot_up
+    docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml up -d
+    pkill -f "lt --port 9000" 2>/dev/null
+    sleep 8
+    nohup lt --port 9000 --subdomain deltax-penpot >/dev/null 2>&1 &
+    echo "Ссылка: https://deltax-penpot.loca.lt"
+    echo "IP для верификации:" (curl -s icanhazip.com)
+end
+
+function penpot_down
+    docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml down
+    pkill -f "lt --port 9000" 2>/dev/null
+end
 
 function searx_reload
-    docker compose -f ~/searxng/docker-compose.yml down
-    pkill ngrok
+    docker compose -f ~/my-files/my-docker-tools/searxng/docker-compose.yml down
+    pkill -f "lt --port 8080" 2>/dev/null
     sleep 1
-    docker compose -f ~/searxng/docker-compose.yml up -d
+    docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml up -d
     sleep 2
-    nohup ngrok http --domain=jerold-pinnate-semineurotically.ngrok-free.dev 8080 >/dev/null 2>&1 &
+    nohup lt --port 8080 --subdomain deltax-searxng >/dev/null 2>&1 &
 end
 
 function searx_up
-    docker compose -f ~/searxng/docker-compose.yml up -d
-    pkill ngrok
+    docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml up -d
+    pkill -f "lt --port 8080" 2>/dev/null
     sleep 2
-    nohup ngrok http --domain=jerold-pinnate-semineurotically.ngrok-free.dev 8080 >/dev/null 2>&1 &
+    nohup lt --port 8080 --subdomain deltax-searxng >/dev/null 2>&1 &
+
+    echo "Туннель для SearXNG запущен!"
+    echo "Ссылка: https://deltax-searxng.loca.lt"
+    echo "IP для верификации:" (curl -s icanhazip.com)
 end
 
 function searx_down
-    docker compose -f ~/searxng/docker-compose.yml down
-    pkill ngrok
+    docker compose -f ~/my-files/my-docker-tools/searxng/docker-compose.yml down
+    pkill -f "lt --port 8080" 2>/dev/null
 end
+
+# ===========================
 
 function dcs-git-ssh-setup
     ssh-keygen -t ed25519 -C (git config --global user.email)
