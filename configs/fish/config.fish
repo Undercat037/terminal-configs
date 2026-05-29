@@ -29,12 +29,12 @@ if status is-interactive
     # ==========
     # Abbrs
     # ==========
-    abbr catb 'bat --style changes'
+    abbr catb 'bat --style changes '
     abbr wget 'wget -c '
 
     abbr tarnow 'tar -acf '
     abbr untar 'tar -zxvf '
-    abbr 7znow '7z a'
+    abbr 7znow '7z a archive-name.7z target-name'
     abbr un7z '7z x'
 
     abbr rcp 'rsync -avz  --progress'
