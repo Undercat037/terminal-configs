@@ -419,19 +419,24 @@ end
 # dcs-garuda-update
 # Port: /usr/bin/garuda-update + main-update + update-helper-scripts
 # ==================================
-function dcs-garuda-update --description "Portable pacman system updater"
+function dcs-garuda-update --description "Portable pacman system updater" 
 
     # ── Флаги ────────────────────────────────────────────────────────────────
-    set -l do_aur 0
-    set -l skip_mirror 0
-    set -l extra_opts
-    set -l _errors
-    set -l _warnings
+    set -l do_aur 0 
+    set -l skip_mirror 0 
+    set -l extra_opts 
+    set -l _errors 
+    set -l _warnings 
+    
+    # Переменные статусов (теперь объявлены на уровне всей функции)
+    set -l dracut_exit 0
+    set -l grub_exit 0
+    set -l locale_exit 0
 
-    for arg in $argv
-        switch $arg
-            case -a --aur
-                set do_aur 1
+    for arg in $argv 
+        switch $arg 
+            case -a --aur 
+               set do_aur 1
             case --skip-mirrorlist
                 set skip_mirror 1
             case -h --help help
@@ -488,7 +493,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color normal
             set -l tmp (mktemp)
             if rate-mirrors --allow-root --save=$tmp arch --max-delay=21600 >/dev/null 2>&1
-                set -l cnt (grep -Ec "^Server *= *" $tmp 2>/dev/null; or echo 0)
+               set -l cnt (grep -Ec "^Server *= *" $tmp 2>/dev/null; or echo 0)
                 if test "$cnt" -ge 10
                     install -m644 $tmp /etc/pacman.d/mirrorlist
                     set db_flag -yy
@@ -536,7 +541,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
                 set_color normal
             end
             rm -f $tmp
-
         else
             set -a _warnings "No mirrorlist tool found (rate-mirrors / reflector)"
         end
@@ -544,18 +548,14 @@ function dcs-garuda-update --description "Portable pacman system updater"
     end
 
     # ── Pre-update: кейринги ──────────────────────────────────────────────────
-    # Port of update-helper-scripts::update_keyring_packages
-    # Обновляем кейринги первыми — иначе при устаревшем кейринге весь апдейт падает
     set -l keyrings archlinux-keyring
-    # chaotic-keyring — если репо подключён
     if test -f /etc/pacman.d/chaotic-mirrorlist
         set -a keyrings chaotic-keyring
     end
-    # blackarch-keyring — если установлен
     if pacman -Qq blackarch-keyring >/dev/null 2>&1
         set -a keyrings blackarch-keyring
     end
-    # Проверяем есть ли обновления для кейрингов
+    
     set -l keyring_updates (pacman -Qu $keyrings 2>/dev/null)
     if test -n "$keyring_updates"
         set_color yellow
@@ -567,7 +567,6 @@ function dcs-garuda-update --description "Portable pacman system updater"
         if test $keyring_exit -ne 0
             set -a _warnings "Keyring update failed (exit $keyring_exit) — continuing anyway"
         else
-            # Кейринги обновились — форсируем пересинк БД
             set db_flag -yy
         end
         echo ""
@@ -582,7 +581,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
         set -a pacman_args $o
     end
 
-    # ── Обновление ───────────────────────────────────────────────────────────
+    # ── Обновление пакетов через Pacman ───────────────────────────────────────
     set_color yellow
     echo "--> $pacman_bin $pacman_args"
     set_color normal
@@ -641,18 +640,15 @@ function dcs-garuda-update --description "Portable pacman system updater"
         set -l dkms_ran 0
         for kdir in /usr/lib/modules/*/pkgbase
             set -l kver (string replace -r '.*/modules/([^/]+)/pkgbase' '$1' $kdir)
-            # Пропускаем ядра не принадлежащие пакету
             if not pacman -Qqo $kdir >/dev/null 2>&1
                 continue
             end
-            # Пропускаем если headers не установлены
             if not test -d /usr/lib/modules/$kver/build
                 set_color yellow
                 echo "  DKMS: skipping $kver — headers not found"
                 set_color normal
                 continue
             end
-            # Берём только модули зарегистрированные именно для этого kver
             set -l modules_for_kver (dkms status -k $kver 2>/dev/null | grep -v '^$')
             if test -z "$modules_for_kver"
                 set_color cyan
@@ -665,9 +661,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
             echo ""
             echo "--> Rebuilding DKMS modules for $kver..."
             set_color normal
-            # Собираем каждый модуль явно через dkms install
             for mod_line in $modules_for_kver
-                # формат: "module/version, kver, arch: installed"
                 set -l mod_ver (string replace -r ',.*' '' $mod_line | string trim)
                 set_color cyan
                 echo "  -> $mod_ver ($kver)"
@@ -689,8 +683,33 @@ function dcs-garuda-update --description "Portable pacman system updater"
         end
     end
 
+    # ── Rebuild initramfs (Dracut) ─────────────────────────────────────────────
+    if command -q dracut
+        set_color yellow
+        echo ""
+        echo "--> Rebuilding initramfs..."
+        set_color normal
+        dcs-dracut-rebuild
+        set dracut_exit $status
+        if test $dracut_exit -ne 0
+            set -a _errors "dracut failed with code $dracut_exit"
+        end
+    end
+
+    # ── Update GRUB configuration ─────────────────────────────────────────────
+    if command -q grub-mkconfig; and test -f /boot/grub/grub.cfg
+        set_color yellow
+        echo ""
+        echo "--> Updating GRUB configuration..."
+        set_color normal
+        sudo grub-mkconfig -o /boot/grub/grub.cfg
+        set grub_exit $status
+        if test $grub_exit -ne 0
+            set -a _errors "grub-mkconfig exited with code $grub_exit"
+        end
+    end
+
     # ── Locale rebuild ────────────────────────────────────────────────────────
-    set -l locale_exit 0
     if command -q locale-gen; and test -f /etc/locale.gen
         set_color yellow
         echo ""
@@ -701,10 +720,22 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set locale_exit $status
             set -a _errors "locale-gen failed (exit $locale_exit)"
         end
+    end
+
+    # ── ФИНАЛЬНЫЙ ОТЧЕТ (Генерация вывода) ─────────────────────────────────────
+    echo ""
+    echo "━━━━━━━━━━━━━━━━ СТАТУС ОБНОВЛЕНИЯ ━━━━━━━━━━━━━━━━"
+
+    # Вывод статуса pacman
+    if test $pacman_exit -eq 0
+        echo "    ✔ pacman system update"
+    else
         set_color red
         echo "    ✘ pacman $pacman_args  (exit $pacman_exit)"
         set_color normal
     end
+
+    # Вывод статуса AUR
     if test $do_aur -eq 1
         if test $aur_exit -eq 0
             echo "    ✔ AUR update"
@@ -714,6 +745,8 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color normal
         end
     end
+
+    # Вывод статуса DKMS
     if command -q dkms
         set -l _has_dkms_mods (dkms status 2>/dev/null | grep -c .)
         if test -n "$_has_dkms_mods"
@@ -726,6 +759,8 @@ function dcs-garuda-update --description "Portable pacman system updater"
             end
         end
     end
+
+    # Вывод статуса локалей
     if command -q locale-gen; and test -f /etc/locale.gen
         if test $locale_exit -eq 0
             echo "    ✔ locale-gen"
@@ -735,6 +770,8 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color normal
         end
     end
+ 
+    # Вывод статуса Dracut
     if command -q dracut
         if test $dracut_exit -eq 0
             echo "    ✔ initramfs rebuild"
@@ -744,6 +781,8 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color normal
         end
     end
+
+    # Вывод статуса GRUB
     if command -q grub-mkconfig; and test -f /boot/grub/grub.cfg
         if test $grub_exit -eq 0
             echo "    ✔ grub-mkconfig"
@@ -754,6 +793,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
         end
     end
 
+    # Вывод предупреждений (Warnings)
     if test (count $_warnings) -gt 0
         echo ""
         set_color yellow
@@ -764,6 +804,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
         end
     end
 
+    # Вывод ошибок (Errors) и подсказок (Fixes)
     if test (count $_errors) -gt 0
         echo ""
         set_color red
