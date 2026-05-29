@@ -3,45 +3,6 @@ function fish_greeting
 end
 
 if status is-interactive
-
-    # ==========================================
-    # Emerge (aura-emerge) Autocompletion
-    # ==========================================
-    complete -e -c emerge
-
-    complete -c emerge -s s -l search -d "Search for packages"
-    complete -c emerge -l sync -d "Sync package database"
-    complete -c emerge -s u -l update -d "Update packages"
-    complete -c emerge -s c -l depclean -d "Remove orphans"
-    complete -c emerge -s C -l unmerge -d "Remove specific packages"
-    complete -c emerge -s p -l pretend -d "Pretend (dry run)"
-    complete -c emerge -s a -l ask -d "Ask before applying changes"
-    complete -c emerge -s 1 -l oneshot -d "Install as dependency (no world.set)"
-    complete -c emerge -l aur -d "Explicitly force AUR only"
-    complete -c emerge -s v -l verbose -d "Verbose output / detailed info in search mode"
-    complete -c emerge -s n -l noreplace -d "Do not reinstall if already installed"
-
-    # Dummy flags for compatibility
-    complete -c emerge -s D -l deep -d "Consider the whole dependency tree"
-    complete -c emerge -s N -l newuse -d "Include installed pkgs with changed USE flags"
-    complete -c emerge -s e -l emptytree -d "Reinstall all world pkgs"
-
-    # Стандартные флаги
-    complete -c emerge -s h -l help -d "Show help"
-    complete -c emerge -s V -l version -d "Show version"
-
-    # Автодополнение для названий пакетов
-    complete -c emerge -f -a "(
-        set -l tok (commandline -ct)
-        if test -n \"\$tok\"; and not string match -q -- '-*' \"\$tok\"
-            if string match -q -- '@*' \"\$tok\"
-                echo '@world'
-            else
-                pacman -Ssq | string match -i \"\$tok*\"
-            end
-        end
-    )"
-
     # ==========
     # Sets
     # ==========
@@ -340,20 +301,12 @@ end
 # Localtunnel (deltax-*) Functions
 # ==========================================
 
-function penpot_reload
-    docker compose -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml down
-    pkill -f "lt --port 9000" 2>/dev/null
-    sleep 1
-    docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml up -d
-    sleep 2
-    nohup lt --port 9000 --subdomain deltax-penpot >/dev/null 2>&1 &
-end
-
 function penpot_up
     docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml up -d
     pkill -f "lt --port 9000" 2>/dev/null
     sleep 8
-    nohup lt --port 9000 --subdomain deltax-penpot >/dev/null 2>&1 &
+    lt --port 9000 --subdomain deltax-penpot >/dev/null 2>&1 &
+    disown
     echo "Ссылка: https://deltax-penpot.loca.lt"
     echo "IP для верификации:" (curl -s icanhazip.com)
 end
@@ -363,29 +316,32 @@ function penpot_down
     pkill -f "lt --port 9000" 2>/dev/null
 end
 
-function searx_reload
-    docker compose -f ~/my-files/my-docker-tools/searxng/docker-compose.yml down
-    pkill -f "lt --port 8080" 2>/dev/null
+function penpot_reload
+    penpot_down
     sleep 1
-    docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml up -d
-    sleep 2
-    nohup lt --port 8080 --subdomain deltax-searxng >/dev/null 2>&1 &
+    penpot_up
 end
 
 function searx_up
     docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml up -d
     pkill -f "lt --port 8080" 2>/dev/null
     sleep 2
-    nohup lt --port 8080 --subdomain deltax-searxng >/dev/null 2>&1 &
-
+    lt --port 8080 --subdomain deltax-searxng >/dev/null 2>&1 &
+    disown
     echo "Туннель для SearXNG запущен!"
     echo "Ссылка: https://deltax-searxng.loca.lt"
     echo "IP для верификации:" (curl -s icanhazip.com)
 end
 
 function searx_down
-    docker compose -f ~/my-files/my-docker-tools/searxng/docker-compose.yml down
+    docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml down
     pkill -f "lt --port 8080" 2>/dev/null
+end
+
+function searx_reload
+    searx_down
+    sleep 1
+    searx_up
 end
 
 # ===========================
