@@ -101,10 +101,11 @@ if status is-interactive
     # AUR / makepkg
     #aur
     abbr aur-clone 'git clone ssh://aur@aur.archlinux.org/'
-    abbr aur-push 'makepkg --printsrcinfo > .SRCINFO; git add PKGBUILD .SRCINFO; git commit -m "update"; git push'
+    abbr aur-push 'makepkg --printsrcinfo > .SRCINFO; git add PKGBUILD .SRCINFO; git commit -m "$(grep pkgver PKGBUILD | head -1 | cut -d= -f2) update"; git push'
     abbr aur-build 'makepkg -si'
     abbr aur-check 'namcap PKGBUILD'
     abbr aur-srcinfo 'makepkg --printsrcinfo > .SRCINFO'
+    #aur-aura-emerge-push
 
     # === journalctl ===
     abbr jlog 'journalctl -b 0 | tee ~/last-session.log'
@@ -292,6 +293,15 @@ if status is-interactive
     end
 
 end
+
+function aur-aura-emerge-push
+    cp -r ~/my-files/my-git-repos/aura-emerge/PKGBUILD ~/my-files/my-aur-repos/aura-emerge/
+    makepkg --printsrcinfo > .SRCINFO
+    git add PKGBUILD .SRCINFO
+    git commit -m "$(grep pkgver PKGBUILD | head -1 | cut -d= -f2) update"
+    git push
+end
+
 
 function take
     sudo setfacl -R -m u:$USER:rwx $argv
