@@ -140,9 +140,9 @@ if status is-interactive
     alias lst='eza -aT --color=always --group-directories-first --icons' # tree listing
     alias lsd='eza -ald --color=always --group-directories-first --icons .*' # show only dotfiles
 
-    alias grep='rg'
-    alias egrep='rg'
-    alias fgrep='rg -F '
+    alias grep='ugrep'
+    alias egrep='ugrep -E'
+    alias fgrep='ugrep -f'
 
     alias mir-arch='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
     alias mir-blac='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/blackarch-mirrorlist'
@@ -296,12 +296,11 @@ end
 
 function aur-aura-emerge-push
     cp -r ~/my-files/my-git-repos/aura-emerge/PKGBUILD ~/my-files/my-aur-repos/aura-emerge/
-    makepkg --printsrcinfo > .SRCINFO
+    makepkg --printsrcinfo >.SRCINFO
     git add PKGBUILD .SRCINFO
     git commit -m "$(grep pkgver PKGBUILD | head -1 | cut -d= -f2) update"
     git push
 end
-
 
 function take
     sudo setfacl -R -m u:$USER:rwx $argv
@@ -429,24 +428,24 @@ end
 # dcs-garuda-update
 # Port: /usr/bin/garuda-update + main-update + update-helper-scripts
 # ==================================
-function dcs-garuda-update --description "Portable pacman system updater" 
+function dcs-garuda-update --description "Portable pacman system updater"
 
     # ── Флаги ────────────────────────────────────────────────────────────────
-    set -l do_aur 0 
-    set -l skip_mirror 0 
-    set -l extra_opts 
-    set -l _errors 
-    set -l _warnings 
-    
+    set -l do_aur 0
+    set -l skip_mirror 0
+    set -l extra_opts
+    set -l _errors
+    set -l _warnings
+
     # Переменные статусов (теперь объявлены на уровне всей функции)
     set -l dracut_exit 0
     set -l grub_exit 0
     set -l locale_exit 0
 
-    for arg in $argv 
-        switch $arg 
-            case -a --aur 
-               set do_aur 1
+    for arg in $argv
+        switch $arg
+            case -a --aur
+                set do_aur 1
             case --skip-mirrorlist
                 set skip_mirror 1
             case -h --help help
@@ -503,7 +502,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color normal
             set -l tmp (mktemp)
             if rate-mirrors --allow-root --save=$tmp arch --max-delay=21600 >/dev/null 2>&1
-               set -l cnt (grep -Ec "^Server *= *" $tmp 2>/dev/null; or echo 0)
+                set -l cnt (grep -Ec "^Server *= *" $tmp 2>/dev/null; or echo 0)
                 if test "$cnt" -ge 10
                     install -m644 $tmp /etc/pacman.d/mirrorlist
                     set db_flag -yy
@@ -565,7 +564,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
     if pacman -Qq blackarch-keyring >/dev/null 2>&1
         set -a keyrings blackarch-keyring
     end
-    
+
     set -l keyring_updates (pacman -Qu $keyrings 2>/dev/null)
     if test -n "$keyring_updates"
         set_color yellow
@@ -780,7 +779,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
             set_color normal
         end
     end
- 
+
     # Вывод статуса Dracut
     if command -q dracut
         if test $dracut_exit -eq 0
@@ -860,3 +859,4 @@ function dcs-garuda-update --description "Portable pacman system updater"
 
     test (count $_errors) -eq 0
 end
+
