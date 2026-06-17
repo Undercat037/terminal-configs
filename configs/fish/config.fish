@@ -39,6 +39,11 @@ if status is-interactive
 
     abbr rcp 'rsync -avz  --progress'
 
+    #take
+
+    abbr imun-true 'sudo chattr +i'
+    abbr imun-false 'sudo chattr -i'
+
     abbr pip-inst 'pip install --break-system-packages'
 
     abbr gowall-edit 'gowall convert ~/Pictures/Wallpapers/WALL-NAME -t color-scheme'
@@ -155,8 +160,8 @@ if status is-interactive
 
     alias rm-full='ls && read -P "Filename: " RMFILE && test -f $RMFILE && dd if=/dev/urandom of=$RMFILE bs=(stat -c%s $RMFILE) count=1 conv=notrunc status=progress && rm -rfi $RMFILE'
 
-    alias ff='fastfetch'
-    alias ffa='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/arch.txt'
+    alias ffo='fastfetch'
+    alias ff='fastfetch --logo-type file --logo ~/.config/fastfetch/templates/arch.txt'
     alias ffh='fastfetch --logo ~/.config/fastfetch/hypr.png --logo-type kitty --logo-width 45 --logo-height 35'
     alias ffhg='fastfetch --logo ~/.config/fastfetch/hypr-gruvbox.png --logo-type kitty --logo-width 45 --logo-height 35'
     alias ffm='fastfetch --logo ~/.config/fastfetch/myst.png --logo-type kitty --logo-width 50 --logo-height 25'
@@ -859,4 +864,3 @@ function dcs-garuda-update --description "Portable pacman system updater"
 
     test (count $_errors) -eq 0
 end
-
