@@ -6,19 +6,22 @@ if status is-interactive
     # ==========
     # Sets
     # ==========
+    set -x PATH /usr/bin/ $PATH
     set --erase --universal fish_key_bindings
     set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
     set -g stell_alive "#ffb31c"
     set -x PATH $HOME/.cargo/bin $PATH
-    set -x ANDROID_NDK_HOME /opt/android-ndk
     set -x PATH $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin $PATH
     set -gx PATH $PATH $HOME/.lmstudio/bin
     set -x XDG_DATA_DIRS /home/deltacat/my-files/Launcher/install/share:/usr/local/share:/usr/share
     set -x PATH /home/deltacat/my-files/Launcher/install/bin $PATH
     set -x PATH /home/deltacat/.local/bin $PATH
-    set -gx CARGO_NET_GIT_FETCH_WITH_CLI true
-    # set -x TERM xterm-256color
+    set -x ANDROID_NDK_HOME /opt/android-ndk
     set -x PATH /usr/lib/ccache/bin $PATH
+    set -gx CARGO_NET_GIT_FETCH_WITH_CLI true
+    set -x TERM xterm-256color
+    set -x MSF_DATABASE_CONFIG /home/deltacat/.msf4/database.yml
+    set -x PATH /usr/bin/ $PATH
 
     # ==========
     # Inits
@@ -32,10 +35,10 @@ if status is-interactive
     abbr catb 'bat --style changes '
     abbr wget 'wget -c '
 
-    abbr tarnow 'tar -acf '
-    abbr untar 'tar -zxvf '
-    abbr 7znow '7z a archive-name.7z target-name'
-    abbr un7z '7z x'
+    abbr tarnow 'tar -acf output.tar.gz input'
+    abbr untar 'tar -zxvf input'
+    abbr 7znow '7z a output.7z input'
+    abbr un7z '7z x input.7z'
 
     abbr rcp 'rsync -avz  --progress'
 
@@ -126,6 +129,8 @@ if status is-interactive
     alias ....="cd ../../.."
     alias .....="cd ../../../.."
     alias ......="cd ../../../../.."
+
+    alias orbot="proxychains4 -q"
 
     alias dl="cd ~/Downloads"
     alias doc="cd ~/Documents"
@@ -864,3 +869,7 @@ function dcs-garuda-update --description "Portable pacman system updater"
 
     test (count $_errors) -eq 0
 end
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /home/deltacat/.lmstudio/bin
+# End of LM Studio CLI section
