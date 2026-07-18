@@ -40,8 +40,8 @@ if status is-interactive
     abbr 7znow '7z a output.7z input'
     abbr un7z '7z x input.7z'
 
-    abbr rcp 'rsync -avz  --progress'
-
+    abbr rcp 'rsync -aHAXxh --info=progress2'
+    abbr rmv 'rsync -aHAXxh --remove-source-files --info=progress2'
     #take
 
     abbr imun-true 'sudo chattr +i'
@@ -55,26 +55,12 @@ if status is-interactive
     abbr code-photo 'freeze src/main.rs ~/myfiles/main-rs.png'
 
     # ========= FFMPEG ===========
-    # Базовая спектрограмма (Stereo, Separate)
-    abbr dcs-ffmpeg-spectrogram 'ffmpeg -i decode/audio.wav -lavfi "showspectrumpic=s=4096x2048:mode=separate" decode/spectrogram.png'
-    # Спектрограмма в цвете (Fiery)
-    abbr dcs-ffmpeg-spectrogram-alt 'ffmpeg -i decode/audio.wav -lavfi "showspectrumpic=s=4096x2048:mode=separate:color=fiery" decode/spectrogram_alt.png'
-    # Извлечение аудио из видео (Тайминг из Wicsur-PRINCE)
-    abbr dcs-ffmpeg-mp4-to-wav 'ffmpeg -ss 00:02:06.133 -t 2 -i Video.mp4 -ac 2 -ar 44100 decode/audio.wav'
-    # Замедление (atempo 0.5)
-    abbr dcs-ffmpeg-slow 'ffmpeg -i decode/audio.wav -filter:a "atempo=0.5" -vn decode/audio_slow.wav'
-    # Разность фаз (Вычитание каналов L-R)
-    abbr dcs-ffmpeg-phase-diff 'ffmpeg -i decode/audio.wav -filter_complex "pan=mono|c0=c0-c1" decode/phase_diff.wav'
-    # Разделение на два моно-файла
-    abbr dcs-ffmpeg-split 'ffmpeg -i decode/audio.wav -map_channel 0.0.0 decode/left.wav -map_channel 0.0.1 decode/right.wav'
-    # Наложение спектрограммы на видео (в реальном времени)
-    abbr dcs-ffmpeg-v-spec 'ffmpeg -i Video.mp4 -filter_complex "[0:a]showspectrum=s=1280x720:mode=separate[v]" -map "[v]" -map 0:a decode/video_spec.mp4'
-    # "Проявление" скрытых деталей (усиление контраста спектрограммы)
-    abbr dcs-ffmpeg-enhance 'ffmpeg -i decode/audio.wav -lavfi "showspectrumpic=s=4096x2048:legend=0,histeq" decode/enhanced_spectrogram.png'
-    abbr dcs-ffmpeg-frames 'ffmpeg -ss 00:02:06.133 -i Video.mp4 -fps_mode passthrough decode/frames-av1/frame_%04d.png'
+    alias ffmg="ls && read -P "Filename: " FILE && ffmpeg -i FILE -c:v av1_nvenc -preset p7 -tune hq -rc vbr -cq 45 -multipass fullres $f\-compress.mp4"
 
     # === for debian ===
     abbr at 'sudo apt install'
+
+    abbr pskill "sudo pkill -9"
 
     abbr own 'sudo chown -R $USER:$USER ~/file'
 
@@ -94,7 +80,7 @@ if status is-interactive
     abbr gto-world-list 'cat /var/lib/portage/world'
 
     # ==== git ====
-    #gt 
+    #gt
     abbr gt-init 'git init'
     abbr gt-status 'git status'
     abbr gt-add-all 'git add .'
@@ -105,6 +91,7 @@ if status is-interactive
     #abbr gt-setup 
     abbr gt-fastcommit 'git add .; git commit -m "fastCommit"; git push'
     #dcs-git-ssh-setup
+    abbr gt-fastcommit-tag 'git add .; git commit -m "1.23.0"; git tag -a v1.23.0 -m "1.23.0"; git push --follow-tags'
 
     # AUR / makepkg
     #aur
@@ -302,14 +289,6 @@ if status is-interactive
         end
     end
 
-end
-
-function aur-aura-emerge-push
-    cp -r ~/my-files/my-git-repos/aura-emerge/PKGBUILD ~/my-files/my-aur-repos/aura-emerge/
-    makepkg --printsrcinfo >.SRCINFO
-    git add PKGBUILD .SRCINFO
-    git commit -m "$(grep pkgver PKGBUILD | head -1 | cut -d= -f2) update"
-    git push
 end
 
 function take
