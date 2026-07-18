@@ -58,12 +58,12 @@ if status is-interactive
     abbr ffmg-compress "set f file.mkv; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-compress.mp4; ffmpeg -i \$f -c:v av1_nvenc -preset p7 -tune hq -rc vbr -cq 40 -multipass fullres \$out"
     abbr ffmg-convert "set f file.mkv; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-converted.mp4; ffmpeg -i \$f -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 192k \$out"
     abbr ffmg-denoise "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-denoised.mp4; ffmpeg -i \$f -vf hqdn3d=4:3:6:4.5 -c:v av1_nvenc -preset p7 -cq 30 -c:a copy \$out"
-    abbr ffmg-denoise-strong "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-denoised.mp4; ffmpeg -i \$f -vf deblock=filter=strong:block=4,hqdn3d=6:4:20:30,atadenoise=0.1:0.1:0.3 -c:v av1_nvenc -preset p7 -cq 28 -c:a copy \$out"
-    abbr ffmg-stab "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-stab.mp4; ffmpeg -i \$f -vf vidstabdetect=shakiness=5:accuracy=15:result=/tmp/transforms.trf -f null -; ffmpeg -i \$f -vf vidstabtransform=input=/tmp/transforms.trf:zoom=0:smoothing=10,unsharp=5:5:0.8:3:3:0.4 -c:v av1_nvenc -preset p7 -cq 30 -c:a copy \$out"
+    abbr ffmg-denoise-strong "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-denoised.mp4; ffmpeg -i \$f -vf \"format=yuv420p,deblock=filter=strong:block=4,hqdn3d=6:4:20:30,atadenoise=0.1:0.1:0.3\" -c:v av1_nvenc -preset p7 -cq 28 -c:a copy \$out"
+    abbr ffmg-stab "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-stab.mp4; set trf (mktemp -u /tmp/vidstab_XXXXXX.trf); ffmpeg -i \$f -vf vidstabdetect=shakiness=5:accuracy=15:result=\$trf -f null -; and ffmpeg -i \$f -vf vidstabtransform=input=\$trf:zoom=0:smoothing=10,unsharp=5:5:0.8:3:3:0.4 -c:v av1_nvenc -preset p7 -cq 30 -c:a copy \$out; rm -f \$trf"
     abbr ffmg-extract-audio "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f).ogg; ffmpeg -i \$f -vn -c:a libvorbis -q:a 6 \$out"
     abbr ffmg-extract-frames "set f file.mp4; set dir (string replace -r '\\.[^.]+\$' '' -- \$f)_frames; mkdir -p \$dir; ffmpeg -i \$f -vf fps=1 \$dir/frame_%04d.png"
-    abbr ffmg-gif "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f).gif; ffmpeg -i \$f -vf fps=15,scale=480:-1:flags=lanczos -loop 0 \$out"
-    abbr ffmg-trim "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-trim.mp4; ffmpeg -i \$f -ss 00:00:10 -to 00:00:30 -c copy \$out"
+    abbr ffmg-gif "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f).gif; ffmpeg -i \$f -vf \"fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 \$out"
+    abbr ffmg-trim "set f file.mp4; set out (string replace -r '\\.[^.]+\$' '' -- \$f)-trim.mp4; ffmpeg -ss 00:00:10 -to 00:00:30 -i \$f -c copy \$out"
 
     # === for debian ===
     abbr at 'sudo apt install'
