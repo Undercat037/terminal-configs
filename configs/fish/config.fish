@@ -55,7 +55,7 @@ if status is-interactive
     abbr code-photo 'freeze src/main.rs ~/myfiles/main-rs.png'
 
     # ========= FFMPEG ===========
-    alias ffmg="ls && read -P "Filename: " FILE && ffmpeg -i FILE -c:v av1_nvenc -preset p7 -tune hq -rc vbr -cq 45 -multipass fullres $f\-compress.mp4"
+    alias ffmg-compress="ls && read -P "Filename: " FILE && ffmpeg -i $FILE -c:v av1_nvenc -preset p7 -tune hq -rc vbr -cq 45 -multipass fullres $FILE\-compress.mp4"
 
     # === for debian ===
     abbr at 'sudo apt install'
