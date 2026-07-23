@@ -35,8 +35,8 @@ if status is-interactive
     abbr catb 'bat --style changes '
     abbr wget 'wget -c '
 
-    abbr tarnow 'tar -acf output.tar.gz input'
-    abbr untar 'tar -zxvf input'
+    abbr tarnow 'tar -acf output.tar.zst input'
+    abbr untar 'tar -zxvf input.tar.zst'
     abbr 7znow '7z a output.7z input'
     abbr un7z '7z x input.7z'
 
@@ -108,7 +108,6 @@ if status is-interactive
     abbr aur-build 'makepkg -si'
     abbr aur-check 'namcap PKGBUILD'
     abbr aur-srcinfo 'makepkg --printsrcinfo > .SRCINFO'
-    #aur-aura-emerge-push
 
     # === journalctl ===
     abbr jlog 'journalctl -b 0 | tee ~/last-session.log'
@@ -125,6 +124,8 @@ if status is-interactive
     alias .....="cd ../../../.."
     alias ......="cd ../../../../.."
 
+    alias networkm-restart='sudo systemctl restart NetworkManager'
+
     alias orbot="proxychains4 -q"
 
     alias dl="cd ~/Downloads"
@@ -138,12 +139,12 @@ if status is-interactive
     #searx_up
     #searx_down
 
-    alias ls='eza -al --color=always --group-directories-first --icons' # preferred listing
-    alias lsz='eza -al --color=always --total-size --group-directories-first --icons' # include file size
-    alias lsa='eza -a --color=always --group-directories-first --icons' # all files and dirs
-    alias lsl='eza -l --color=always --group-directories-first --icons' # long format
-    alias lst='eza -aT --color=always --group-directories-first --icons' # tree listing
-    alias lsd='eza -ald --color=always --group-directories-first --icons .*' # show only dotfiles
+    alias ls='eza -al --color=always --group-directories-first --icons=always' # preferred listing
+    alias lsz='eza -al --color=always --total-size --group-directories-first --icons=always' # include file size
+    alias lsa='eza -a --color=always --group-directories-first --icons=always' # all files and dirs
+    alias lsl='eza -l --color=always --group-directories-first --icons=always' # long format
+    alias lst='eza -aT --color=always --group-directories-first --icons=always' # tree listing
+    alias lsd='eza -ald --color=always --group-directories-first --icons=always .*' # show only dotfiles
 
     alias grep='ugrep'
     alias egrep='ugrep -E'
