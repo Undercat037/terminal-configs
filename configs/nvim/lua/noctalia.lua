@@ -11,12 +11,12 @@ function M.setup()
     base06 = "#e2e2e2",
     base07 = "#e2e2e2",
     base08 = "#ffb4ab",
-    base09 = "#ccc991",
-    base0A = "#e5bfaa",
-    base0B = "#ffb68c",
-    base0C = "#ccc991",
-    base0D = "#ffb68c",
-    base0E = "#e5bfaa",
+    base09 = "#c7ca95",
+    base0A = "#e4bfa7",
+    base0B = "#ffb782",
+    base0C = "#c7ca95",
+    base0D = "#ffb782",
+    base0E = "#e4bfa7",
     base0F = "#93000a",
   })
 

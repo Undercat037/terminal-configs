@@ -6,6 +6,9 @@ if status is-interactive
     # ==========
     # Sets
     # ==========
+
+    set -gx EDITOR (which nvim)
+    set -gx VISUAL (which nvim)
     set -x PATH /usr/bin/ $PATH
     set --erase --universal fish_key_bindings
     set -x PKG_CONFIG_PATH /usr/local/lib/pkgconfig /usr/local/share/pkgconfig $PKG_CONFIG_PATH
@@ -104,7 +107,7 @@ if status is-interactive
     # AUR / makepkg
     #aur
     abbr aur-clone 'git clone ssh://aur@aur.archlinux.org/'
-    abbr aur-push 'makepkg --printsrcinfo > .SRCINFO; git add PKGBUILD .SRCINFO; git commit -m "$(grep pkgver PKGBUILD | head -1 | cut -d= -f2) update"; git push'
+    abbr aur-push 'updpkgsums; makepkg --printsrcinfo > .SRCINFO; git add PKGBUILD .SRCINFO; git commit -m "$(grep pkgver PKGBUILD | head -1 | cut -d= -f2) update"; git push'
     abbr aur-build 'makepkg -si'
     abbr aur-check 'namcap PKGBUILD'
     abbr aur-srcinfo 'makepkg --printsrcinfo > .SRCINFO'
