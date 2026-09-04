@@ -149,6 +149,22 @@ if status is-interactive
     alias lst='eza -aT --color=always --group-directories-first --icons=always' # tree listing
     alias lsd='eza -ald --color=always --group-directories-first --icons=always .*' # show only dotfiles
 
+    function gpg-unlock --description "Kill hung GPG processes and remove stale lock files"
+        # kill all GPG proc
+        pkill -9 gpg-agent 2>/dev/null
+        pkill -9 gpg 2>/dev/null
+        pkill -9 dirmngr 2>/dev/null
+        pkill -9 scdaemon 2>/dev/null
+
+        # delete stale lock-files
+        rm -f ~/.gnupg/*.lock 2>/dev/null
+        rm -f ~/.gnupg/public-keys.d/*.lock 2>/dev/null
+        rm -f ~/.gnupg/*.gpg.lock 2>/dev/null
+        rm -f /run/user/(id -u)/gnupg/S.* 2>/dev/null
+
+        echo "GPG locks cleaned"
+    end
+
     alias grep='ugrep'
     alias egrep='ugrep -E'
     alias fgrep='ugrep -f'
@@ -308,50 +324,61 @@ function take
     sudo setfacl -R -d -m u:$USER:rwx $argv
 end
 # ==========================================
-# Localtunnel (deltax-*) Functions
+# Selfhosted Functions
 # ==========================================
 
-function penpot_up
-    docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml up -d
-    pkill -f "lt --port 9000" 2>/dev/null
-    sleep 8
-    lt --port 9000 --subdomain deltax-penpot >/dev/null 2>&1 &
-    disown
-    echo "Ссылка: https://deltax-penpot.loca.lt"
-    echo "IP для верификации:" (curl -s icanhazip.com)
+function forge_up
+    docker compose -p forge -f ~/my-files/my-docker-tools/forgejo/docker-compose.yaml up -d
+    echo "Web: https://dcsforge.share.zrok.io"
+    echo "SSH: git@dcs-forge.tailca0333.ts.net"
 end
-
-function penpot_down
-    docker compose -p penpot -f ~/my-files/my-docker-tools/penpot/docker-compose.yaml down
-    pkill -f "lt --port 9000" 2>/dev/null
+function forge_down
+    docker compose -p forge -f ~/my-files/my-docker-tools/forgejo/docker-compose.yaml down
 end
-
-function penpot_reload
-    penpot_down
+function forge_reload
+    forge_down
     sleep 1
-    penpot_up
+    forge_up
 end
 
 function searx_up
     docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml up -d
-    pkill -f "lt --port 8080" 2>/dev/null
-    sleep 2
-    lt --port 8080 --subdomain deltax-searxng >/dev/null 2>&1 &
-    disown
-    echo "Туннель для SearXNG запущен!"
-    echo "Ссылка: https://deltax-searxng.loca.lt"
-    echo "IP для верификации:" (curl -s icanhazip.com)
+    echo "Web: https://dcssearxng.share.zrok.io"
 end
-
 function searx_down
     docker compose -p searxng -f ~/my-files/my-docker-tools/searxng/docker-compose.yml down
-    pkill -f "lt --port 8080" 2>/dev/null
 end
-
 function searx_reload
     searx_down
     sleep 1
     searx_up
+end
+
+function archive_up
+    docker compose -p archivebox -f ~/my-files/my-docker-tools/archivebox/docker-compose.yml up -d
+    echo "Web: https://dcsarchive.share.zrok.io"
+    echo "Admin: https://dcsarchive.share.zrok.io/admin/"
+end
+function archive_down
+    docker compose -p archivebox -f ~/my-files/my-docker-tools/archivebox/docker-compose.yml down
+end
+function archive_reload
+    archivebox_down
+    sleep 1
+    archivebox_up
+end
+
+function home_up
+    docker compose -p home -f ~/my-files/my-docker-tools/dcshome/docker-compose.yml up -d
+    echo "Web: https://dcshome.share.zrok.io"
+end
+function home_down
+    docker compose -p home -f ~/my-files/my-docker-tools/dcshome/docker-compose.yml down
+end
+function home_reload
+    home_down
+    sleep 1
+    home_up
 end
 
 # ===========================
